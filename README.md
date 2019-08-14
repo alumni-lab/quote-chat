@@ -16,3 +16,9 @@ Tech Stack:
 - Redux, potentially!
 - Node.js, Express
 - Websockets, potentially with Socket.IO
+- styled components
+- some framework like Ant Design, Semantic UI x React, etc.
+
+## Mockups
+
+![](/mockups/1.png)
