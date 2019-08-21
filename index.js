@@ -16,11 +16,13 @@ app.post('/quote', (req, res) => {
                     "text": "Hello to the world!"
                 }
             ]
-        } }
+        }
+    }
         , function (error, response, body) {
             console.log(body);
-        });
-    {
+        },
+        res.status(200));
+    // {
         // res.json(
         //     {
         //         "response_type": "in_channel",
@@ -31,9 +33,8 @@ app.post('/quote', (req, res) => {
         //             }
         //         ]
         //     })
-    }
+    // }
 
-)
 })
 
 app.listen(port, () => console.log(`Quote Chat listening on port ${port}!`))
