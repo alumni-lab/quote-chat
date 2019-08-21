@@ -8,7 +8,7 @@ app.get('/', (req, res) => res.send('Hello World!'))
 app.post('/quote', (req, res) => {
     request.post({
         headers: { 'content-type': 'application/json' }
-        , url: req.response_url, body: {
+        , uri: req.response_url, body: {
             "response_type": "in_channel",
             "text": "Hello World!",
             "attachments": [
