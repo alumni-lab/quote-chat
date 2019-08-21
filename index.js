@@ -4,7 +4,7 @@ const app = express()
 const port = process.env.PORT || 5000
 
 app.get('/', (req, res) => res.send('Hello World!'))
-app.post('/quote', (req, res) => res.status(200).redirect('/send'))
+app.post('/quote', (req, res) => res.json({response_url: 'https://quote-chat.herokuapp.com/quote/send'}))
 app.get('/quote/send', (req, res) => {
     res.json(
     {
