@@ -19,7 +19,7 @@ app.post('/quote', (req, res) => {
         }
     }
         , function (error, response, body) {
-            console.log(body);
+            console.log(error, response, body);
         },
         res.status(200));
     // {
