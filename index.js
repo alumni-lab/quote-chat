@@ -6,7 +6,7 @@ const port = process.env.PORT || 5000
 
 app.get('/', (req, res) => res.send('Hello World!'))
 app.post('/quote', (req, res) => {
-    console.log(req)
+    console.log(req.body)
     request.post({
         headers: { 'content-type': 'application/json' }
         , uri: req.response_url, body: {
