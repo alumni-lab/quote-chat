@@ -1,20 +1,36 @@
 const express = require('express')
 const app = express()
+var request = require('request');
 
 const port = process.env.PORT || 5000
 
 app.get('/', (req, res) => res.send('Hello World!'))
-app.post('/quote', (req, res) => res.json({"response_url": 'https://quote-chat.herokuapp.com/quote/send'}))
-app.get('/quote/send', (req, res) => {
-    res.json(
+app.post('/quote', (req, res) => {
+    request.post({
+        headers: { 'content-type': 'application/json' }
+        , url: req.response_url, body: {
+            "response_type": "in_channel",
+            "text": "Hello World!",
+            "attachments": [
+                {
+                    "text": "Hello to the world!"
+                }
+            ]
+        } }
+        , function (error, response, body) {
+            console.log(body);
+        });
     {
-        "response_type": "in_channel",
-        "text": "Hello World!",
-        "attachments": [
-            {
-                "text":"Hello to the world!"
-            }
-        ]
+        // res.json(
+        //     {
+        //         "response_type": "in_channel",
+        //         "text": "Hello World!",
+        //         "attachments": [
+        //             {
+        //                 "text": "Hello to the world!"
+        //             }
+        //         ]
+        //     })
     }
 
 )
