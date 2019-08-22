@@ -7,10 +7,11 @@ const port = process.env.PORT || 5000
 
 app.get('/', (req, res) => res.send('Hello World!'))
 app.post('/quote', (req, res) => {
-    console.log(req.body)
+    console.log(req.body.response_url)
     request.post({
         headers: { 'content-type': 'application/json' }
-        , url: req.body.response_url, body: {
+        , url: req.body.response_url,
+        body: {
             "response_type": "in_channel",
             "text": "Hello World!",
             "attachments": [
@@ -22,19 +23,22 @@ app.post('/quote', (req, res) => {
     }
         , function (error, response, body) {
             console.log(error, response, body);
-        },
-        res.status(200));
+        }
+    )
+
+    res.status(200);
+
     // {
-        // res.json(
-        //     {
-        //         "response_type": "in_channel",
-        //         "text": "Hello World!",
-        //         "attachments": [
-        //             {
-        //                 "text": "Hello to the world!"
-        //             }
-        //         ]
-        //     })
+    // res.json(
+    //     {
+    //         "response_type": "in_channel",
+    //         "text": "Hello World!",
+    //         "attachments": [
+    //             {
+    //                 "text": "Hello to the world!"
+    //             }
+    //         ]
+    //     })
     // }
 
 })
