@@ -35,9 +35,9 @@ function continueRequest(url) {
 app.get('/', (req, res) => res.send('Hello World!'))
 
 app.post('/quote', (req, res) => {
-    if (req.body.text.toLowerCase() == 'help') {   
+    if (req.body.text.toLowerCase() == '-help') {   
         res.send({
-            "text" : "Type in your quote"
+            "text" : "Type in your quote and see the magic happen"
         })
     } else {
         continueRequest(req.body.response_url);
