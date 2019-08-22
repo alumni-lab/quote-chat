@@ -1,16 +1,16 @@
 const express = require('express')
 const app = express()
-var request = require('request');
-const querystring = require('querystring');
-
+const request = require('request');
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: false }))
 const port = process.env.PORT || 5000
 
 app.get('/', (req, res) => res.send('Hello World!'))
 app.post('/quote', (req, res) => {
-    console.log(req.query)
+    console.log(req.body)
     request.post({
         headers: { 'content-type': 'application/json' }
-        , url: req.query.response_url, body: {
+        , url: req.body.response_url, body: {
             "response_type": "in_channel",
             "text": "Hello World!",
             "attachments": [
