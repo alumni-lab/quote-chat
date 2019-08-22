@@ -39,6 +39,7 @@ app.post('/quote', (req, res) => {
     continueRequest(req.body.response_url);
 
     res.status(200);
+    res.send("please wait")
 
     // {
     // res.json(
