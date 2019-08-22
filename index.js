@@ -29,12 +29,12 @@ function continueRequest(url) {
                 console.log(error, response, body);
             }
         )
-
     }, 1000);
 }
 
 app.get('/', (req, res) => res.send('Hello World!'))
 app.get('/quote', (req, res) => {
+    console.log("INCOMING REQUEST")
     console.log(req.body.response_url)
     continueRequest(req.body.response_url);
 
