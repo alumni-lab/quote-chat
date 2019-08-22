@@ -12,7 +12,7 @@ const body = JSON.stringify({
     "text": "Hello World!",
     "attachments": [
         {
-            "text": "Hello to the world!"
+            "text": "Quote chat slash command awaiting some awesome quotes!!"
         }
     ]
 });
@@ -25,34 +25,17 @@ function continueRequest(url) {
             uri: url,
             body: body
         }
-            , function (error, response, body) {
+            , function (error) {
                 console.log(error);
             }
         )
-    }, 1000);
+    }, 500);
 }
 
 app.get('/', (req, res) => res.send('Hello World!'))
 app.post('/quote', (req, res) => {
-    console.log("INCOMING REQUEST")
-    console.log(req.body.response_url)
     continueRequest(req.body.response_url);
-
-    res.status(200);
-    res.send("please wait")
-
-    // {
-    // res.json(
-    //     {
-    //         "response_type": "in_channel",
-    //         "text": "Hello World!",
-    //         "attachments": [
-    //             {
-    //                 "text": "Hello to the world!"
-    //             }
-    //         ]
-    //     })
-    // }
+    res.status(200).send("Requesting quote!")
 
 })
 
