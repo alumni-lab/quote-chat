@@ -18,12 +18,20 @@ const body = JSON.stringify({
 });
 
 
-function continueRequest(url) {
+function continueRequest(url, textToQuote) {
     setTimeout(() => {
         request.post({
             headers: { 'content-type': 'application/json' },
             uri: url,
-            body: body
+            body: JSON.stringify({
+                "response_type": "in_channel",
+                "text": "Hello World!",
+                "attachments": [
+                    {
+                        "text": `Soon we will add a quote for "${textToQuote}"`
+                    }
+                ]
+            })
         }
             , function (error) {
                 console.log(error);
@@ -40,7 +48,7 @@ app.post('/quote', (req, res) => {
             "text" : "Type in your quote and see the magic happen"
         })
     } else {
-        continueRequest(req.body.response_url);
+        continueRequest(req.body.response_url, req.body.text);
         res.status(200).send("Requesting quote!")
     }
 
