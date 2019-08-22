@@ -26,7 +26,7 @@ function continueRequest(url) {
             body: body
         }
             , function (error, response, body) {
-                console.log(error, response, body);
+                console.log(error);
             }
         )
     }, 1000);
