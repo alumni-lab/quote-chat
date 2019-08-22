@@ -35,7 +35,7 @@ function continueRequest(url) {
 app.get('/', (req, res) => res.send('Hello World!'))
 
 app.post('/quote', (req, res) => {
-    console.log(req.body.params)
+    console.log(req.body.text)
     continueRequest(req.body.response_url);
     res.status(200).send("Requesting quote!")
 
