@@ -6,12 +6,12 @@ app.use(bodyParser.urlencoded({ extended: false }))
 const port = process.env.PORT || 5000
 
 app.get('/', (req, res) => res.send('Hello World!'))
-app.post('/quote', (req, res) => {
+app.get('/quote', (req, res) => {
     console.log(req.body.response_url)
     request.post({
-        headers: { 'content-type': 'application/json' }
-        , url: req.body.response_url,
-        body: {
+        headers: { 'content-type': 'application/json' }, 
+        uri: req.body.response_url,
+        body: JSON.stringify({
             "response_type": "in_channel",
             "text": "Hello World!",
             "attachments": [
@@ -19,7 +19,7 @@ app.post('/quote', (req, res) => {
                     "text": "Hello to the world!"
                 }
             ]
-        }
+        })
     }
         , function (error, response, body) {
             console.log(error, response, body);
