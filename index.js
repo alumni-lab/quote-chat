@@ -40,7 +40,7 @@ app.post('/quote', (req, res) => {
 
         res.status(200)
         .type('application/json')
-        .send([
+        .send(JSON.stringify([
             {
                 "type": "section",
                 "text": {
@@ -130,7 +130,7 @@ app.post('/quote', (req, res) => {
                     }
                 ]
             }
-        ])
+        ]))
     }
 
 })
