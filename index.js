@@ -134,7 +134,7 @@ app.post('/quote', (req, res) => {
             }
         
         ]
-    ]}
+    }
         )
     }
 
