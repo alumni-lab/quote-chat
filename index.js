@@ -172,6 +172,7 @@ app.post('/quote', (req, res) => {
 
 app.post('/api/response', (req, res) => {
     const parsedPayload = JSON.parse(req.body.payload)
+    console.log(parsedPayload.actions[0].value)
     if (parsedPayload.actions[0].value === 'cancel_quote') {
         request.post({
             headers: { 'content-type': 'application/json' },
