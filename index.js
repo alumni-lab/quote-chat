@@ -40,7 +40,7 @@ app.post('/quote', (req, res) => {
 
         res.status(200)
         .set('content-type', 'application/json')
-        .send({
+        .send([{
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
@@ -129,7 +129,7 @@ app.post('/quote', (req, res) => {
                     }
                 ]
             }
-        )
+        ])
     }
 
 })
