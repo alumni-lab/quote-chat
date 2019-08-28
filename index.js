@@ -39,8 +39,9 @@ app.post('/quote', (req, res) => {
         // continueRequest(req.body.response_url, req.body.text);
 
         res.status(200)
-        .set('content-type', 'application/json')
-        .send([{
+        .type('application/json')
+        .send([
+            {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
@@ -120,7 +121,7 @@ app.post('/quote', (req, res) => {
                     },
                     {
                         "type": "button",
-                        "style": "danger",
+                         "style": "danger",
                         "text": {
                             "type": "plain_text",
                             "text": "Cancel"
