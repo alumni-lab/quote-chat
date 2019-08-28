@@ -38,7 +38,7 @@ app.post('/quote', (req, res) => {
     } else {
         // continueRequest(req.body.response_url, req.body.text);
 
-        res.status(200).send(JSON.stringify([
+        res.status(200).send([
             {
                 "type": "section",
                 "text": {
@@ -128,7 +128,7 @@ app.post('/quote', (req, res) => {
                     }
                 ]
             }
-        ]))
+        ])
     }
 
 })
