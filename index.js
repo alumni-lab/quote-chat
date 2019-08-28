@@ -33,7 +33,7 @@ app.get('/', (req, res) => res.send('Hello World!'))
 app.post('/quote', (req, res) => {
     if (req.body.text.toLowerCase() == '-help') {
         res.send({
-            "text": "Type in your quote and see the magic happen"
+            "text": "Type in your quote and see the magic happen \nExamples: \n/quote -movie batman (shows quotes from batman\n/quote -char jack sparrow (shows quotes from jack sparrow\n/quote i'll be back (searches for quotes containing 'i'll be back'"
         })
     } else {
         // continueRequest(req.body.response_url, req.body.text);
