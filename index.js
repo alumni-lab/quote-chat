@@ -186,7 +186,7 @@ app.post('/api/response', (req, res) => {
         //     }
         // )
         res.send({
-            "text": "",
+            "text": "wtf",
             "replace_original" : "true"
         })
        
