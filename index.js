@@ -42,98 +42,127 @@ app.post('/quote', (req, res) => {
         .type('application/json')
         .send({
             "blocks": [
-                
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": "We found *10 Quotes* that match your search*"
-                }
-            },
-            {
-                "type": "divider"
-            },
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": "*Your quote option 1*"
-                }
-            },
-            {
-                "type": "context",
-                "elements": [
-                    {
+                {
+                    "type": "section",
+                    "text": {
                         "type": "mrkdwn",
-                        "text": "Quote by _Quote author_ from *Movie name*"
+                        "text": "Here are some quotes we found:"
                     }
-                ]
-            },
-            {
-                "type": "divider"
-            },
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": "*Your quote option 2*"
-                }
-            },
-            {
-                "type": "context",
-                "elements": [
-                    {
+                },
+                {
+                    "type": "divider"
+                },
+                {
+                    "type": "section",
+                    "text": {
                         "type": "mrkdwn",
-                        "text": "Quote by _Quote author_ from *Movie name*"
-                    }
-                ]
-            },
-            {
-                "type": "divider"
-            },
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": "*Your quote option 3*"
-                }
-            },
-            {
-                "type": "context",
-                "elements": [
-                    {
-                        "type": "mrkdwn",
-                        "text": "Quote by _Quote author_ from *Movie name*"
-                    }
-                ]
-            },
-            {
-                "type": "divider"
-            },
-            {
-                "type": "actions",
-                "elements": [
-                    {
-                        "type": "button",
-                        "text": {
-                            "type": "plain_text",
-                            "text": "Shuffle options"
-                        },
-                        "value": "load_more_quotes"
+                        "text": "*Your quote option 1*"
                     },
-                    {
+                    "accessory": {
                         "type": "button",
-                         "style": "danger",
                         "text": {
                             "type": "plain_text",
-                            "text": "Cancel"
+                            "emoji": true,
+                            "text": "Pick Me"
                         },
-                        "value": "cancel_quote"
+                        "value": "pick_option_1"
                     }
-                ]
-            }
-        
-        ]
+                },
+                {
+                    "type": "context",
+                    "elements": [
+                        {
+                            "type": "mrkdwn",
+                            "text": "Quote by _Quote author_ from *Movie name*"
+                        }
+                    ]
+                },
+                {
+                    "type": "divider"
+                },
+                
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": "*Your quote option 2*"
+                    },
+                    "accessory": {
+                        "type": "button",
+                        "text": {
+                            "type": "plain_text",
+                            "emoji": true,
+                            "text": "Pick Me"
+                        },
+                        "value": "pick_option_2"
+                    }
+                },
+                {
+                    "type": "context",
+                    "elements": [
+                        {
+                            "type": "mrkdwn",
+                            "text": "Quote by _Quote author_ from *Movie name*"
+                        }
+                    ]
+                },
+                {
+                    "type": "divider"
+                },
+            
+                {
+                    "type": "section",
+                    "text": {
+                        "type": "mrkdwn",
+                        "text": "*Your quote option 3*"
+                    },
+                    "accessory": {
+                        "type": "button",
+                        "text": {
+                            "type": "plain_text",
+                            "emoji": true,
+                            "text": "Pick Me"
+                        },
+                        "value": "pick_option_3"
+                    }
+                },
+                {
+                    "type": "context",
+                    "elements": [
+                        {
+                            "type": "mrkdwn",
+                            "text": "Quote by _Quote author_ from *Movie name*"
+                        }
+                    ]
+                },
+                
+                {
+                    "type": "divider"
+                },
+                {
+                    "type": "actions",
+                    "elements": [
+                        {
+                            "type": "button",
+                            "text": {
+                                "type": "plain_text",
+                                "emoji": true,
+                                "text": "Shuffle Quotes"
+                            },
+                            "value": "get_more_quotes"
+                        },
+                        {
+                            "type": "button",
+                             "style": "danger",
+                            "text": {
+                                "type": "plain_text",
+                                "text": "Cancel"
+                            },
+                            "value": "cancel_quote"
+                        }
+                    ]
+                }
+            ]
     }
         )
     }
