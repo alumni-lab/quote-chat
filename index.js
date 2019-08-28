@@ -172,7 +172,21 @@ app.post('/quote', (req, res) => {
 
 app.post('/api/response', (req, res) => {
     const parsedPayload = JSON.parse(req.body.payload)
-    console.log(parsedPayload.actions)
+    if (parsedPayload.actions[0].value === 'cancel_quote') {
+        request.post({
+            headers: { 'content-type': 'application/json' },
+            uri: parsedPayload.response_url,
+            body: JSON.stringify({
+                "text": "",
+                "replace_original" : "true"
+            })
+        }
+            , function (error) {
+                console.log(error);
+            }
+        )
+       
+    }
     // if (req.body.text.toLowerCase() == '-help') {
     //     res.send({
     //         "text": "Type in your quote and see the magic happen \nExamples: \n/quote -movie batman (shows quotes from batman)\n/quote -char jack sparrow (shows quotes from jack sparrow)\n/quote i'll be back (searches for quotes containing 'i'll be back'"
