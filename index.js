@@ -38,8 +38,9 @@ app.post('/quote', (req, res) => {
     } else {
         // continueRequest(req.body.response_url, req.body.text);
 
-        res.status(200).send([
-            {
+        res.status(200).send({
+            headers: { 'content-type': 'application/json' },
+            body: {
                 "type": "section",
                 "text": {
                     "type": "mrkdwn",
@@ -128,7 +129,7 @@ app.post('/quote', (req, res) => {
                     }
                 ]
             }
-        ])
+        })
     }
 
 })
