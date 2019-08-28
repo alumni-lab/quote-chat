@@ -46,7 +46,7 @@ app.post('/quote', (req, res) => {
                     "type": "section",
                     "text": {
                         "type": "mrkdwn",
-                        "text": `Here are some quotes we found matching "${res.body.text}"`
+                        "text": `Here are some quotes we found matching "${req.body.text}"`
                     }
                 },
                 {
