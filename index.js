@@ -171,7 +171,7 @@ app.post('/quote', (req, res) => {
 
 
 app.post('/api/response', (req, res) => {
-    console.log(req.body)
+    console.log(req.body.payload.actions)
     // if (req.body.text.toLowerCase() == '-help') {
     //     res.send({
     //         "text": "Type in your quote and see the magic happen \nExamples: \n/quote -movie batman (shows quotes from batman)\n/quote -char jack sparrow (shows quotes from jack sparrow)\n/quote i'll be back (searches for quotes containing 'i'll be back'"
