@@ -174,19 +174,18 @@ app.post('/api/response', (req, res) => {
     const parsedPayload = JSON.parse(req.body.payload)
     if (parsedPayload.actions[0].value === 'cancel_quote') {
         res.sendStatus(200)
-            request.post({
-                headers: { 'content-type': 'application/json' },
-                uri: parsedPayload.response_url,
-                body: JSON.stringify({
-                    "text": "wtf",
-                    "replace_original" : "true"
-                })
+        request.post({
+            headers: { 'content-type': 'application/json' },
+            uri: parsedPayload.response_url,
+            body: JSON.stringify({
+                "delete_original": "true"
+            })
+        }
+            , function (error) {
+                console.log(error);
             }
-                , function (error) {
-                    console.log(error);
-                }
-            )
-       
+        )
+
     }
 }
 )
