@@ -35,12 +35,6 @@ function continueRequest(reply_to, textToQuote) {
             ]
           }
         ]
-        // "text": "Hello World!",
-        // "attachments": [
-        //   {
-        //     "text": `${textToQuote}`
-        //   }
-        // ]
       })
     }
       , function (error) {
@@ -58,7 +52,6 @@ app.post('/quote', (req, res) => {
       "text": "Type in your quote and see the magic happen \nExamples: \n/quote -movie batman (shows quotes from batman)\n/quote -char jack sparrow (shows quotes from jack sparrow)\n/quote i'll be back (searches for quotes containing 'i'll be back'"
     })
   } else {
-    // continueRequest(req.body.response_url, req.body.text);
 
     res.status(200)
       .type('application/json')
@@ -206,7 +199,6 @@ app.post('/api/response', (req, res) => {
     )
 
   } else {
-    console.log(parsedPayload)
     if (parsedPayload.actions[0].value.slice(0, 8) === 'pick_opt') {
       res.sendStatus(200)
       let choice = `You chose option ${parsedPayload.actions[0].value.slice(12)}`
@@ -214,6 +206,6 @@ app.post('/api/response', (req, res) => {
     }
   }
 }
-)
+) 
 
 app.listen(port, () => console.log(`Quote Chat listening on port ${port}!`))
