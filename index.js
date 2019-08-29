@@ -4,54 +4,216 @@ const request = require('request');
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }))
 const port = process.env.PORT || 5000
+const qcToken = process.env.QUOTE_CHAT_TOKEN
 
-
-
-const body = JSON.stringify({
-    "response_type": "in_channel",
-    "text": "Hello World!",
-    "attachments": [
+function continueRequest(clearUrl, reply_to, textToQuote) {
+  // clear origin message
+  request.post({
+    headers: { 'content-type': 'application/json' },
+    uri: clearUrl,
+    body: JSON.stringify({
+      "delete_original": "true"
+    })
+  })
+  // send responst as user
+  request.post({
+    headers: {
+      'content-type': 'application/json',
+      'Authorization': `Bearer ${qcToken}`
+    },
+    uri: 'https://slack.com/api/chat.postMessage',
+    body: JSON.stringify({
+      "channel": reply_to,
+      "as_user": true,
+      "delete_original": "true",
+      "blocks": [
         {
-            "text": "Quote chat slash command awaiting some awesome quotes!!"
-        }
-    ]
-});
-
-
-function continueRequest(url, textToQuote) {
-    setTimeout(() => {
-        request.post({
-            headers: { 'content-type': 'application/json' },
-            uri: url,
-            body: JSON.stringify({
-                "response_type": "in_channel",
-                "text": "Hello World!",
-                "attachments": [
-                    {
-                        "text": `Soon we will add a quote for "${textToQuote}"`
-                    }
-                ]
-            })
-        }
-            , function (error) {
-                console.log(error);
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": `${textToQuote}`
+          }
+        },
+        {
+          "type": "context",
+          "elements": [
+            {
+              "type": "mrkdwn",
+              "text": "_Quote author_ from *Movie name*"
             }
-        )
-    }, 500);
+          ]
+        }
+      ]
+    })
+  }
+    , function (error) {
+      console.log(error);
+    }
+  )
 }
 
 app.get('/', (req, res) => res.send('Hello World!'))
 
 app.post('/quote', (req, res) => {
-    if (req.body.text.toLowerCase() == '-help') {   
-        res.send({
-            "text" : "Type in your quote and see the magic happen"
-        })
-    } else {
-        continueRequest(req.body.response_url, req.body.text);
-        res.status(200).send("Requesting quote!")
-    }
+  if (req.body.text.toLowerCase() == '-help') {
+    res.send({
+      "text": "Type in your quote and see the magic happen \nExamples: \n/quote -movie batman (shows quotes from batman)\n/quote -char jack sparrow (shows quotes from jack sparrow)\n/quote i'll be back (searches for quotes containing 'i'll be back'"
+    })
+  } else {
+
+    res.status(200)
+      .type('application/json')
+      .send({
+        "blocks": [
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": `Here are some quotes we found matching "${req.body.text}"`
+            }
+          },
+          {
+            "type": "divider"
+          },
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Your quote option 1*"
+            },
+            "accessory": {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "emoji": true,
+                "text": "Pick Me"
+              },
+              "value": "pick_option_1"
+            }
+          },
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "mrkdwn",
+                "text": "Quote by _Quote author_ from *Movie name*"
+              }
+            ]
+          },
+          {
+            "type": "divider"
+          },
+
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Your quote option 2*"
+            },
+            "accessory": {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "emoji": true,
+                "text": "Pick Me"
+              },
+              "value": "pick_option_2"
+            }
+          },
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "mrkdwn",
+                "text": "Quote by _Quote author_ from *Movie name*"
+              }
+            ]
+          },
+          {
+            "type": "divider"
+          },
+
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": "*Your quote option 3*"
+            },
+            "accessory": {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "emoji": true,
+                "text": "Pick Me"
+              },
+              "value": "pick_option_3"
+            }
+          },
+          {
+            "type": "context",
+            "elements": [
+              {
+                "type": "mrkdwn",
+                "text": "Quote by _Quote author_ from *Movie name*"
+              }
+            ]
+          },
+
+          {
+            "type": "divider"
+          },
+          {
+            "type": "actions",
+            "elements": [
+              {
+                "type": "button",
+                "text": {
+                  "type": "plain_text",
+                  "emoji": true,
+                  "text": "Shuffle Quotes"
+                },
+                "value": "get_more_quotes"
+              },
+              {
+                "type": "button",
+                "style": "danger",
+                "text": {
+                  "type": "plain_text",
+                  "text": "Cancel"
+                },
+                "value": "cancel_quote"
+              }
+            ]
+          }
+        ]
+      }
+      )
+  }
 
 })
+
+
+app.post('/api/response', (req, res) => {
+  const parsedPayload = JSON.parse(req.body.payload)
+  if (parsedPayload.actions[0].value === 'cancel_quote') {
+    res.sendStatus(200)
+    request.post({
+      headers: { 'content-type': 'application/json' },
+      uri: parsedPayload.response_url,
+      body: JSON.stringify({
+        "delete_original": "true"
+      })
+    }
+    )
+
+  } else {
+    if (parsedPayload.actions[0].value.slice(0, 8) === 'pick_opt') {
+      res.sendStatus(200)
+      let choice = `You chose option ${parsedPayload.actions[0].value.slice(12)}`
+      continueRequest(parsedPayload.response_url, parsedPayload.channel.id, choice)
+    }
+  }
+}
+)
 
 app.listen(port, () => console.log(`Quote Chat listening on port ${port}!`))
