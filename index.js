@@ -13,7 +13,7 @@ function continueRequest(url, textToQuote) {
       uri: url,
       body: JSON.stringify({
         "response_type": "in_channel",
-        "blocks" : [
+        "blocks": [
           {
             "type": "section",
             "text": {
@@ -203,10 +203,11 @@ app.post('/api/response', (req, res) => {
 
   } else {
     console.log(parsedPayload)
-    if (parsedPayload.actions[0].value.slice(0,8) === 'pick_opt') {
+    if (parsedPayload.actions[0].value.slice(0, 8) === 'pick_opt') {
       res.sendStatus(200)
       let choice = `You chose option ${parsedPayload.actions[0].value.slice(12)}`
       continueRequest(parsedPayload.response_url, choice)
+    }
   }
 }
 )
