@@ -4,15 +4,17 @@ const request = require('request');
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: false }))
 const port = process.env.PORT || 5000
-
+// const qcToken = process.env.QUOTE_CHAT_TOKEN
 
 function continueRequest(reply_to, textToQuote) {
   setTimeout(() => {
     request.post({
-      headers: { 'content-type': 'application/json' },
+      headers: { 
+        'content-type': 'application/json'},
+        // 'Authorization': `Bearer ${qcToken}` },
       uri: 'https://slack.com/api/chat.postMessage',
       body: JSON.stringify({
-        "response_type": "in_channel",
+        "channel": reply_to,
         "as_user": true,
         "delete_original": "true",
         "blocks": [
