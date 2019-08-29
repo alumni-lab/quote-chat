@@ -6,11 +6,11 @@ app.use(bodyParser.urlencoded({ extended: false }))
 const port = process.env.PORT || 5000
 
 
-function continueRequest(url, textToQuote) {
+function continueRequest(reply_to, textToQuote) {
   setTimeout(() => {
     request.post({
       headers: { 'content-type': 'application/json' },
-      uri: url,
+      uri: 'https://slack.com/api/chat.postMessage',
       body: JSON.stringify({
         "response_type": "in_channel",
         "as_user": true,
@@ -208,7 +208,7 @@ app.post('/api/response', (req, res) => {
     if (parsedPayload.actions[0].value.slice(0, 8) === 'pick_opt') {
       res.sendStatus(200)
       let choice = `You chose option ${parsedPayload.actions[0].value.slice(12)}`
-      continueRequest(parsedPayload.response_url, choice)
+      continueRequest(parsedPayload.channel.id, choice)
     }
   }
 }
