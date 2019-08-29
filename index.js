@@ -13,6 +13,8 @@ function continueRequest(url, textToQuote) {
       uri: url,
       body: JSON.stringify({
         "response_type": "in_channel",
+        "as_user": true,
+        "delete_original": "true",
         "blocks": [
           {
             "type": "section",
