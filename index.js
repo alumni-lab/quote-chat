@@ -6,42 +6,50 @@ app.use(bodyParser.urlencoded({ extended: false }))
 const port = process.env.PORT || 5000
 const qcToken = process.env.QUOTE_CHAT_TOKEN
 
-function continueRequest(reply_to, textToQuote) {
-  setTimeout(() => {
-    request.post({
-      headers: { 
-        'content-type': 'application/json',
-        'Authorization': `Bearer ${qcToken}` },
-      uri: 'https://slack.com/api/chat.postMessage',
-      body: JSON.stringify({
-        "channel": reply_to,
-        "as_user": true,
-        "delete_original": "true",
-        "blocks": [
-          {
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": `${textToQuote}`
-            }
-          },
-          {
-            "type": "context",
-            "elements": [
-              {
-                "type": "mrkdwn",
-                "text": "_Quote author_ from *Movie name*"
-              }
-            ]
+function continueRequest(clearUrl, reply_to, textToQuote) {
+  // clear origin message
+  request.post({
+    headers: { 'content-type': 'application/json' },
+    uri: clearUrl,
+    body: JSON.stringify({
+      "delete_original": "true"
+    })
+  })
+  // send responst as user
+  request.post({
+    headers: {
+      'content-type': 'application/json',
+      'Authorization': `Bearer ${qcToken}`
+    },
+    uri: 'https://slack.com/api/chat.postMessage',
+    body: JSON.stringify({
+      "channel": reply_to,
+      "as_user": true,
+      "delete_original": "true",
+      "blocks": [
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": `${textToQuote}`
           }
-        ]
-      })
+        },
+        {
+          "type": "context",
+          "elements": [
+            {
+              "type": "mrkdwn",
+              "text": "_Quote author_ from *Movie name*"
+            }
+          ]
+        }
+      ]
+    })
+  }
+    , function (error) {
+      console.log(error);
     }
-      , function (error) {
-        console.log(error);
-      }
-    )
-  }, 500);
+  )
 }
 
 app.get('/', (req, res) => res.send('Hello World!'))
@@ -202,10 +210,10 @@ app.post('/api/response', (req, res) => {
     if (parsedPayload.actions[0].value.slice(0, 8) === 'pick_opt') {
       res.sendStatus(200)
       let choice = `You chose option ${parsedPayload.actions[0].value.slice(12)}`
-      continueRequest(parsedPayload.channel.id, choice)
+      continueRequest(parsedPayload.response_url, parsedPayload.channel.id, choice)
     }
   }
 }
-) 
+)
 
 app.listen(port, () => console.log(`Quote Chat listening on port ${port}!`))
