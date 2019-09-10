@@ -21,10 +21,11 @@ function dbQuery(quote) {
     if (err) throw err;
     for (let row of res.rows) {
       console.log(JSON.stringify(row));
-      
-      client.query(`SELECT * FROM characters WHERE id LIKE ${row.character_id}`, (error, result) => {
+        console.log(row.character_id)
+        console.log(row)
+      client.query(`SELECT * FROM characters WHERE id = ${row.character_id}`, (error, result) => {
         if(error) throw error;
-        console.log(JSON.stringify(result.rows))
+        console.log(JSON.stringify(result))
       })
     }
     client.end();
