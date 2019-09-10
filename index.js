@@ -29,7 +29,7 @@ function dbQuery(quote) {
   //       console.log(row)
   //   }
     client.end();
-  });
+  // });
 }
 dbQuery('something')
 
