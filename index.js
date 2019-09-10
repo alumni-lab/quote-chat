@@ -20,7 +20,7 @@ function dbQuery(quote) {
   client.query('SELECT * FROM quotes limit 3;', (err, res) => {
     if (err) throw err;
     for (let row of res.rows) {
-      console.log(JSON.stringify(row));
+      console.log(row);
       console.log(row.character_id)
       // client.query('SELECT * FROM quotes limit 3;', (error, result) => {
       //   if (error) console.error(error);
