@@ -24,7 +24,7 @@ function dbQuery(quote) {
       // console.log(row.character_id)
       
       quoteList.push(row)
-      client.query('SELECT * FROM characters WHERE id = 2;', (error, result) => {
+      client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`, (error, result) => {
         if (error) console.error(error);
         console.log(result.rows[0].name)
         
