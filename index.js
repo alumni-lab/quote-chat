@@ -29,10 +29,10 @@ function dbQuery(quote) {
     }
   });
   setTimeout(() => {
-    console.log(quoteList)
+    return quoteList
   }, 1000);
 }
-dbQuery('something')
+// dbQuery('something')
 
 function continueRequest(clearUrl, reply_to, textToQuote) {
   // clear origin message
@@ -108,7 +108,7 @@ app.post('/quote', (req, res) => {
             "type": "section",
             "text": {
               "type": "mrkdwn",
-              "text": quotes.one.quote
+              "text": quotes[0].quote
             },
             "accessory": {
               "type": "button",
@@ -125,7 +125,7 @@ app.post('/quote', (req, res) => {
             "elements": [
               {
                 "type": "mrkdwn",
-                "text": "Quote by _Quote author_ from *Movie name*"
+                "text": `Quote by ${quotes[0].character} from The Lord of the Rings`
               }
             ]
           },
@@ -137,7 +137,7 @@ app.post('/quote', (req, res) => {
             "type": "section",
             "text": {
               "type": "mrkdwn",
-              "text": "*Your quote option 2*"
+              "text": quotes[1].quote
             },
             "accessory": {
               "type": "button",
@@ -154,7 +154,7 @@ app.post('/quote', (req, res) => {
             "elements": [
               {
                 "type": "mrkdwn",
-                "text": "Quote by _Quote author_ from *Movie name*"
+                "text": `Quote by ${quotes[1].character} from The Lord of the Rings`
               }
             ]
           },
@@ -166,7 +166,7 @@ app.post('/quote', (req, res) => {
             "type": "section",
             "text": {
               "type": "mrkdwn",
-              "text": "*Your quote option 3*"
+              "text": quotes[2].quote
             },
             "accessory": {
               "type": "button",
@@ -183,7 +183,7 @@ app.post('/quote', (req, res) => {
             "elements": [
               {
                 "type": "mrkdwn",
-                "text": "Quote by _Quote author_ from *Movie name*"
+                "text": `Quote by ${quotes[0].character} from The Lord of the Rings`
               }
             ]
           },
