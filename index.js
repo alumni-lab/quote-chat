@@ -17,7 +17,7 @@ client.connect();
 
 function dbQuery(quote) {
   let quoteList = [];
-  client.query('SELECT * FROM characters limit 3;', (err, res) => {
+  client.query('SELECT * FROM quotes limit 3;', (err, res) => {
     if (err) throw err;
     for (let row of res.rows) {
       console.log(row);
@@ -26,11 +26,11 @@ function dbQuery(quote) {
       client.end();
     }
 
-    // client.query('SELECT * FROM quotes limit 3;', (error, result) => {
-    //   if (error) console.error(error);
-    //   console.log(JSON.stringify(result))
-    //   client.end();
-    // })
+    client.query('SELECT * FROM characters WHERE id = 2;', (error, result) => {
+      if (error) console.error(error);
+      console.log(result)
+      client.end();
+    })
   });
 
 }
