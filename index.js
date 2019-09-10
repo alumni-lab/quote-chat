@@ -15,7 +15,7 @@ const client = new Client({
 
 client.connect();
 
-function dbQuery(quote) {
+async function dbQuery(quote) {
   let quoteList = [];
   client.query('SELECT * FROM quotes limit 3;', async (err, res) => {
     if (err) throw err;
