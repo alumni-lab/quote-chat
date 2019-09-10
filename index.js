@@ -20,13 +20,13 @@ function dbQuery(quote) {
   client.query('SELECT * FROM quotes limit 3;', async (err, res) => {
     if (err) throw err;
     for (let row of res.rows) {
-      
+      let quo = row
       // console.log(row);
       
       const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
       // console.log(result.rows[0].name)
-      row.character = result.rows[0].name
-      quoteList.push(row)
+      quo.character = result.rows[0].name
+      quoteList.push(quo)
     
     }
   });
