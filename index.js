@@ -17,18 +17,18 @@ client.connect();
 
 function dbQuery(quote) {
   let quoteList = [];
-  client.query('SELECT * FROM quotes limit 3;', (err, res) => {
+  client.query('SELECT * FROM quotes limit 3;', async (err, res) => {
     if (err) throw err;
     for (let row of res.rows) {
       console.log(row);
       // console.log(row.character_id)
       
       quoteList.push(row)
-      client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`, (error, result) => {
-        if (error) console.error(error);
-        console.log(result.rows[0].name)
-        
-      })
+      const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
+      console.log(result)
+        // if (error) console.error(error);
+        // console.log(result.rows[0].name)
+      
     }
   });
 
