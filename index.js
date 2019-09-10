@@ -23,7 +23,9 @@ function dbQuery(quote) {
       console.log(JSON.stringify(row));
         const query = `SELECT name FROM characters WHERE id = ${row.character_id}`
       client.query(query, (error, result) => {
-        if(error) throw error;
+        if(error){
+          console.error(error);
+        }
         console.log(result)
       })
     }
