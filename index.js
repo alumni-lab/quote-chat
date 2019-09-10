@@ -6,6 +6,27 @@ app.use(bodyParser.urlencoded({ extended: false }))
 const port = process.env.PORT || 5000
 const qcToken = process.env.QUOTE_CHAT_TOKEN
 
+const { Client } = require('pg');
+
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true,
+});
+
+client.connect();
+
+function dbQuery(quote) {
+
+  client.query('SELECT * FROM quotes limit 3;', (err, res) => {
+    if (err) throw err;
+    for (let row of res.rows) {
+      console.log(JSON.stringify(row));
+    }
+    client.end();
+  });
+}
+dbQuery('something')
+
 function continueRequest(clearUrl, reply_to, textToQuote) {
   // clear origin message
   request.post({
@@ -52,7 +73,6 @@ function continueRequest(clearUrl, reply_to, textToQuote) {
   )
 }
 
-app.get('/', (req, res) => res.send('Hello World!'))
 
 app.post('/quote', (req, res) => {
   if (req.body.text.toLowerCase() == '-help') {
@@ -60,7 +80,9 @@ app.post('/quote', (req, res) => {
       "text": "Type in your quote and see the magic happen \nExamples: \n/quote -movie batman (shows quotes from batman)\n/quote -char jack sparrow (shows quotes from jack sparrow)\n/quote i'll be back (searches for quotes containing 'i'll be back'"
     })
   } else {
-
+    // GET QUOTES FROM DB
+    let quotes = dbQuery('something');
+    
     res.status(200)
       .type('application/json')
       .send({
@@ -79,7 +101,7 @@ app.post('/quote', (req, res) => {
             "type": "section",
             "text": {
               "type": "mrkdwn",
-              "text": "*Your quote option 1*"
+              "text": quotes.one.quote
             },
             "accessory": {
               "type": "button",
