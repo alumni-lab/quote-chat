@@ -21,12 +21,10 @@ function dbQuery(quote) {
     if (err) throw err;
     for (let row of res.rows) {
       console.log(JSON.stringify(row));
-        console.log(row.character_id)
-        console.log(row)
         const query = `SELECT name FROM characters WHERE id = ${row.character_id}`
       client.query(query, (error, result) => {
         if(error) throw error;
-        console.log(JSON.stringify(result))
+        console.log(result)
       })
     }
     client.end();
