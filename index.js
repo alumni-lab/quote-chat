@@ -25,7 +25,7 @@ function dbQuery(quote) {
       
       quoteList.push(row)
       const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
-      console.log(result)
+      console.log(result.rows[0].name)
         // if (error) console.error(error);
         // console.log(result.rows[0].name)
       
