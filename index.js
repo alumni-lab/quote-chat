@@ -16,20 +16,23 @@ const client = new Client({
 client.connect();
 
 function dbQuery(quote) {
-
-  client.query('SELECT * FROM quotes limit 3;', (err, res) => {
+  let quoteList = [];
+  client.query('SELECT * FROM characters limit 3;', (err, res) => {
     if (err) throw err;
     for (let row of res.rows) {
       console.log(row);
-      console.log(row.character_id)
-      // client.query('SELECT * FROM quotes limit 3;', (error, result) => {
-      //   if (error) console.error(error);
-      //   console.log(JSON.stringify(result))
-      // client.end();
-      // })
+      // console.log(row.character_id)
+      quoteList.push(row)
+      client.end();
     }
-    client.end();
+
+    // client.query('SELECT * FROM quotes limit 3;', (error, result) => {
+    //   if (error) console.error(error);
+    //   console.log(JSON.stringify(result))
+    //   client.end();
+    // })
   });
+
 }
 dbQuery('something')
 
