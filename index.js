@@ -30,7 +30,7 @@ function dbQuery(quote) {
   });
   setTimeout(() => {
     console.log(quoteList)
-  }, 10);
+  }, 1000);
 }
 dbQuery('something')
 
