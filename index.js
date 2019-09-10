@@ -20,18 +20,17 @@ function dbQuery(quote) {
   client.query('SELECT * FROM quotes limit 3;', async (err, res) => {
     if (err) throw err;
     for (let row of res.rows) {
-      console.log(row);
-      // console.log(row.character_id)
       
-      quoteList.push(row)
+      // console.log(row);
+      
       const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
-      console.log(result.rows[0].name)
-        // if (error) console.error(error);
-        // console.log(result.rows[0].name)
-      
+      // console.log(result.rows[0].name)
+      row.character = result.rows[0].name
+      quoteList.push(row)
+    
     }
   });
-
+  console.log(quoteList)
 }
 dbQuery('something')
 
