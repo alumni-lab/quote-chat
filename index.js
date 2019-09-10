@@ -23,13 +23,11 @@ function dbQuery(quote) {
       console.log(row);
       // console.log(row.character_id)
       quoteList.push(row)
-      client.end();
     }
 
     client.query('SELECT * FROM characters WHERE id = 2;', (error, result) => {
       if (error) console.error(error);
       console.log(result)
-      client.end();
     })
   });
 
