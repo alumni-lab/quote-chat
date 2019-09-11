@@ -6,6 +6,34 @@ app.use(bodyParser.urlencoded({ extended: false }))
 const port = process.env.PORT || 5000
 const qcToken = process.env.QUOTE_CHAT_TOKEN
 
+const { Client } = require('pg');
+// test
+
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true,
+});
+
+client.connect();
+
+async function dbQuery(quote) {
+  let quoteList = [];
+  let res = await client.query('SELECT * FROM quotes limit 3;');
+  // if (err) throw err;
+  for (let row of res.rows) {
+    let quo = row      
+    const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
+    // console.log(result.rows[0].name)
+    quo.character = result.rows[0].name
+    quoteList.push(quo)
+  
+  }
+
+  return quoteList
+
+}
+// dbQuery('something')
+
 function continueRequest(clearUrl, reply_to, textToQuote) {
   // clear origin message
   request.post({
@@ -52,14 +80,15 @@ function continueRequest(clearUrl, reply_to, textToQuote) {
   )
 }
 
-app.get('/', (req, res) => res.send('Hello World!'))
 
-app.post('/quote', (req, res) => {
+app.post('/quote', async (req, res) => {
   if (req.body.text.toLowerCase() == '-help') {
     res.send({
       "text": "Type in your quote and see the magic happen \nExamples: \n/quote -movie batman (shows quotes from batman)\n/quote -char jack sparrow (shows quotes from jack sparrow)\n/quote i'll be back (searches for quotes containing 'i'll be back'"
     })
   } else {
+    // GET QUOTES FROM DB
+    let quotes = await dbQuery('something')
 
     res.status(200)
       .type('application/json')
@@ -79,7 +108,7 @@ app.post('/quote', (req, res) => {
             "type": "section",
             "text": {
               "type": "mrkdwn",
-              "text": "*Your quote option 1*"
+              "text": quotes[0].quote
             },
             "accessory": {
               "type": "button",
@@ -96,7 +125,7 @@ app.post('/quote', (req, res) => {
             "elements": [
               {
                 "type": "mrkdwn",
-                "text": "Quote by _Quote author_ from *Movie name*"
+                "text": `Quote by ${quotes[0].character} from The Lord of the Rings`
               }
             ]
           },
@@ -108,7 +137,7 @@ app.post('/quote', (req, res) => {
             "type": "section",
             "text": {
               "type": "mrkdwn",
-              "text": "*Your quote option 2*"
+              "text": quotes[1].quote
             },
             "accessory": {
               "type": "button",
@@ -125,7 +154,7 @@ app.post('/quote', (req, res) => {
             "elements": [
               {
                 "type": "mrkdwn",
-                "text": "Quote by _Quote author_ from *Movie name*"
+                "text": `Quote by ${quotes[1].character} from The Lord of the Rings`
               }
             ]
           },
@@ -137,7 +166,7 @@ app.post('/quote', (req, res) => {
             "type": "section",
             "text": {
               "type": "mrkdwn",
-              "text": "*Your quote option 3*"
+              "text": quotes[2].quote
             },
             "accessory": {
               "type": "button",
@@ -154,7 +183,7 @@ app.post('/quote', (req, res) => {
             "elements": [
               {
                 "type": "mrkdwn",
-                "text": "Quote by _Quote author_ from *Movie name*"
+                "text": `Quote by ${quotes[0].character} from The Lord of the Rings`
               }
             ]
           },
