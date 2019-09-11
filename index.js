@@ -230,7 +230,7 @@ app.post('/api/response', async (req, res) => {
   } else if (parsedPayload.actions[0].value === 'get_more_quotes') {
     // GET QUOTES FROM DB
     let quotes = await dbQuery('something')
-
+    console.log('####################################')
     res.status(200)
       .type('application/json')
       .send({
