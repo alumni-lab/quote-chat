@@ -226,7 +226,7 @@ app.post('/api/response', async (req, res) => {
         "delete_original": "true"
       })
     })
-  } else if (parsedPayload.actions[0].value.slice(0,14) === 'get_more_quotes') {
+  } else if (parsedPayload.actions[0].value.slice(0,15) === 'get_more_quotes') {
     // GET QUOTES FROM DB
     let quotes = await dbQuery('something')
     console.log(req.body)
