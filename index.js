@@ -235,9 +235,8 @@ app.post('/api/response', async (req, res) => {
     request.post({
       headers: {
         'content-type': 'application/json',
-        'Authorization': `Bearer ${qcToken}`
       },
-      uri: 'https://slack.com/api/chat.postMessage',
+      uri: parsedPayload.response_url,
       body: JSON.stringify({
         "blocks": [{
             "type": "section",
