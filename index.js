@@ -241,7 +241,7 @@ app.post('/api/response', async (req, res) => {
             "type": "section",
             "text": {
               "type": "mrkdwn",
-              "text": `Here are some quotes we found matching "${req.body.text}"`
+              "text": `Here are some quotes we found matching "${parsedPayload.actions[0].value.slice(16)}"`
             }
           },
           {
