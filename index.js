@@ -337,7 +337,7 @@ app.post('/api/response', async (req, res) => {
                   "emoji": true,
                   "text": "Shuffle Quotes"
                 },
-                "value": "get_more_quotes"
+                "value": `get_more_quotes_${parsedPayload.actions[0].value.slice(16)}`
               },
               {
                 "type": "button",
