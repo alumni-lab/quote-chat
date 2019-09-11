@@ -232,8 +232,13 @@ app.post('/api/response', async (req, res) => {
     let quotes = await dbQuery('something')
     console.log('####################################')
     res.status(200)
-      .type('application/json')
-      .send({
+    request.post({
+      headers: {
+        'content-type': 'application/json',
+        'Authorization': `Bearer ${qcToken}`
+      },
+      uri: 'https://slack.com/api/chat.postMessage',
+      body: JSON.stringify({
         "blocks": [{
             "type": "section",
             "text": {
@@ -349,6 +354,7 @@ app.post('/api/response', async (req, res) => {
           }
         ]
       })
+    })
   } else {
   if (parsedPayload.actions[0].value.slice(0, 8) === 'pick_opt') {
     res.sendStatus(200)
