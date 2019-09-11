@@ -88,7 +88,7 @@ app.post('/quote', async (req, res) => {
     })
   } else {
     // GET QUOTES FROM DB
-    let quotes = await dbQuery('something')
+    let quotes = await dbQuery(req.body.text);
 
     res.status(200)
       .type('application/json')
@@ -213,7 +213,7 @@ app.post('/quote', async (req, res) => {
 })
 
 
-app.post('/api/response', (req, res) => {
+app.post('/api/response', async (req, res) => {
   const parsedPayload = JSON.parse(req.body.payload)
   if (parsedPayload.actions[0].value === 'cancel_quote') {
     res.sendStatus(200)
