@@ -17,20 +17,19 @@ client.connect();
 
 async function dbQuery(quote) {
   let quoteList = [];
-  client.query('SELECT * FROM quotes limit 3;', async (err, res) => {
-    if (err) throw err;
-    for (let row of res.rows) {
-      let quo = row      
-      const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
-      // console.log(result.rows[0].name)
-      quo.character = result.rows[0].name
-      quoteList.push(quo)
-    
-    }
-  });
-  setTimeout(() => {
-    return quoteList
-  }, 1000);
+  let res = await client.query('SELECT * FROM quotes limit 3;');
+  // if (err) throw err;
+  for (let row of res.rows) {
+    let quo = row      
+    const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
+    // console.log(result.rows[0].name)
+    quo.character = result.rows[0].name
+    quoteList.push(quo)
+  
+  }
+
+  return quoteList
+
 }
 // dbQuery('something')
 
@@ -81,14 +80,14 @@ function continueRequest(clearUrl, reply_to, textToQuote) {
 }
 
 
-app.post('/quote', (req, res) => {
+app.post('/quote', async (req, res) => {
   if (req.body.text.toLowerCase() == '-help') {
     res.send({
       "text": "Type in your quote and see the magic happen \nExamples: \n/quote -movie batman (shows quotes from batman)\n/quote -char jack sparrow (shows quotes from jack sparrow)\n/quote i'll be back (searches for quotes containing 'i'll be back'"
     })
   } else {
     // GET QUOTES FROM DB
-    let quotes = dbQuery('something');
+    let quotes = await dbQuery('something')
 
     res.status(200)
       .type('application/json')
