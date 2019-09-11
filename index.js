@@ -242,7 +242,7 @@ app.post('/api/response', async (req, res) => {
             "type": "section",
             "text": {
               "type": "mrkdwn",
-              "text": `TEST Here are some quotes we found matching`
+              "text": `Here are some quotes we found matching "${req.body.text}"`
             }
           },
           {
