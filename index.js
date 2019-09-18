@@ -337,7 +337,8 @@ app.post('/api/response', async (req, res) => {
                   "emoji": true,
                   "text": "Shuffle Quotes"
                 },
-                "value": `get_more_quotes_${parsedPayload.actions[0].value.slice(16)}`
+                "value": `get_more_quotes_${parsedPayload.actions[0].value.slice(16)}`,
+                "choice": { quote: quotes[2].quote, char: quotes[2].character, movie: 'The Lord of the Rings'}
               },
               {
                 "type": "button",
@@ -357,7 +358,7 @@ app.post('/api/response', async (req, res) => {
   if (parsedPayload.actions[0].value.slice(0, 8) === 'pick_opt') {
     console.log(parsedPayload)
     console.log("#############################")
-    console.log(parsedPayload.actions[0].text)
+    console.log(parsedPayload.actions[0].choice)
     res.sendStatus(200)
     let choice = `You chose option ${parsedPayload.actions[0].value.slice(12)}`
     continueRequest(parsedPayload.response_url, parsedPayload.channel.id, choice)
