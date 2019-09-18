@@ -22,13 +22,19 @@ client.connect();
 async function dbQuery(quote) {
   let quoteList = [];
   let res = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quote}%' LIMIT 3;`);
-  console.log(res.rows.length)  
   for (let row of res.rows) {
     console.log(row)
     let quo = row
     const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
     quo.character = result.rows[0].name
     quoteList.push(quo)
+  }
+  if (quoteList.length < 3) {
+    const quoteSplit = quote.split(' ')
+    console.log(quoteSplit)
+    // while (quoteList.length < 3) {
+      // let more = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quote}%' LIMIT 3;`);
+    // }
   }
 
   return quoteList
@@ -124,7 +130,7 @@ app.post('/quote', async (req, res) => {
               "text": "Pick Me"
             },
             "value": `pick_option_${quotes[0].id}`
-            
+
           }
         },
         {
@@ -152,7 +158,7 @@ app.post('/quote', async (req, res) => {
               "text": "Pick Me"
             },
             "value": `pick_option_${quotes[1].id}`
-            
+
           }
         },
         {
@@ -269,7 +275,7 @@ app.post('/api/response', async (req, res) => {
               "emoji": true,
               "text": "Pick Me"
             },
-            "value": `pick_option_${quotes[0].id}`            
+            "value": `pick_option_${quotes[0].id}`
           }
         },
         {
