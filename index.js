@@ -123,7 +123,8 @@ app.post('/quote', async (req, res) => {
               "emoji": true,
               "text": "Pick Me"
             },
-            "value": "pick_option_1"
+            "value": `pick_option_${quotes[0].id}`
+            
           }
         },
         {
@@ -150,7 +151,8 @@ app.post('/quote', async (req, res) => {
               "emoji": true,
               "text": "Pick Me"
             },
-            "value": "pick_option_2"
+            "value": `pick_option_${quotes[1].id}`
+            
           }
         },
         {
@@ -268,7 +270,7 @@ app.post('/api/response', async (req, res) => {
               "emoji": true,
               "text": "Pick Me"
             },
-            "value": "pick_option_1"
+            "value": `pick_option_${quotes[0].id}`            
           }
         },
         {
@@ -296,6 +298,7 @@ app.post('/api/response', async (req, res) => {
               "text": "Pick Me"
             },
             "value": "pick_option_2"
+            "value": `pick_option_${quotes[1].id}`
           }
         },
         {
@@ -363,10 +366,7 @@ app.post('/api/response', async (req, res) => {
     })
   } else {
     if (parsedPayload.actions[0].value.slice(0, 8) === 'pick_opt') {
-      console.log(parsedPayload)
       const yourQuote = await getDetails(parsedPayload.actions[0].value.slice(12))
-      console.log("#############################")
-      console.log(yourQuote.rows)
       res.sendStatus(200)
       const quoteQuote = yourQuote.rows[0].quote
       const quoteChar = await getChar(yourQuote.rows[0].character_id)
