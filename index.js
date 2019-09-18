@@ -297,7 +297,6 @@ app.post('/api/response', async (req, res) => {
               "emoji": true,
               "text": "Pick Me"
             },
-            "value": "pick_option_2"
             "value": `pick_option_${quotes[1].id}`
           }
         },
