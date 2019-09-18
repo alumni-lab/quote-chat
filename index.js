@@ -226,7 +226,7 @@ app.post('/api/response', async (req, res) => {
         "delete_original": "true"
       })
     })
-  } else if (parsedPayload.actions[0].value.slice(0, 15) === 'get_more_quotes') {
+  } else if (parsedPayload.actions[0].value.type === 'get_more_quotes') {
     // GET QUOTES FROM DB
     let quotes = await dbQuery('something')
     console.log(req.body)
@@ -342,7 +342,9 @@ app.post('/api/response', async (req, res) => {
               "emoji": true,
               "text": "Shuffle Quotes"
             },
-            "value": `get_more_quotes_${parsedPayload.actions[0].value.slice(16)}`
+            "value": {
+              "type": `get_more_quotes`,
+              "value": parsedPayload.actions[0].value.type
           },
           {
             "type": "button",
