@@ -22,8 +22,9 @@ client.connect();
 async function dbQuery(quote) {
   let quoteList = [];
   let res = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quote}%' limit 3;`);
-  // if (err) throw err;
+  
   for (let row of res.rows) {
+    console.log(row)
     let quo = row
     const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
     quo.character = result.rows[0].name
