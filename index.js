@@ -357,7 +357,7 @@ app.post('/api/response', async (req, res) => {
   if (parsedPayload.actions[0].value.slice(0, 8) === 'pick_opt') {
     console.log(parsedPayload)
     console.log("#############################")
-    console.log(parsedPayload.actions.text)
+    console.log(parsedPayload.actions[0].text)
     res.sendStatus(200)
     let choice = `You chose option ${parsedPayload.actions[0].value.slice(12)}`
     continueRequest(parsedPayload.response_url, parsedPayload.channel.id, choice)
