@@ -38,9 +38,13 @@ async function getDetails(id) {
   let res = await client.query(`SELECT * FROM quotes WHERE id = ${id};`);
   return res
 }
-// dbQuery('something')
+async function getChar(id) {
+  let res = await client.query(`SELECT * FROM characters WHERE id = ${id};`);
 
-function continueRequest(clearUrl, reply_to, textToQuote) {
+  return res.rows[0].name
+}
+
+function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie) {
   // clear origin message
   request.post({
     headers: {
@@ -66,14 +70,14 @@ function continueRequest(clearUrl, reply_to, textToQuote) {
         "type": "section",
         "text": {
           "type": "mrkdwn",
-          "text": `${textToQuote}`
+          "text": `${quoteText}`
         }
       },
       {
         "type": "context",
         "elements": [{
           "type": "mrkdwn",
-          "text": "_Quote author_ from *Movie name*"
+          "text": `_${quoteChar}_ from *${quoteMovie}*`
         }]
       }
       ]
@@ -364,8 +368,10 @@ app.post('/api/response', async (req, res) => {
       console.log("#############################")
       console.log(yourQuote.rows)
       res.sendStatus(200)
-      let choice = yourQuote.rows[0].quote
-      continueRequest(parsedPayload.response_url, parsedPayload.channel.id, choice)
+      const quoteQuote = yourQuote.rows[0].quote
+      const quoteChar = await getChar(yourQuote.rows[0].character_id)
+      const quoteMovie = 'The Lord of the Rings'
+      continueRequest(parsedPayload.response_url, parsedPayload.channel.id, quoteQuote, quoteChar, quoteMovie)
     }
   }
 }
