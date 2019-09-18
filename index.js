@@ -60,19 +60,19 @@ function continueRequest(clearUrl, reply_to, textToQuote) {
       "as_user": true,
       "delete_original": "true",
       "blocks": [{
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": `${textToQuote}`
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": `${textToQuote}`
+          }
+        },
+        {
+          "type": "context",
+          "elements": [{
+            "type": "mrkdwn",
+            "text": "_Quote author_ from *Movie name*"
+          }]
         }
-      },
-      {
-        "type": "context",
-        "elements": [{
-          "type": "mrkdwn",
-          "text": "_Quote author_ from *Movie name*"
-        }]
-      }
       ]
     })
   }, function (error) {
@@ -94,122 +94,118 @@ app.post('/quote', async (req, res) => {
       .type('application/json')
       .send({
         "blocks": [{
-          "type": "section",
-          "text": {
-            "type": "mrkdwn",
-            "text": `Here are some quotes we found matching "${req.body.text}"`
-          }
-        },
-        {
-          "type": "divider"
-        },
-        {
-          "type": "section",
-          "text": {
-            "type": "mrkdwn",
-            "text": quotes[0].quote
-          },
-          "accessory": {
-            "type": "button",
+            "type": "section",
             "text": {
-              "type": "plain_text",
-              "emoji": true,
-              "text": "Pick Me"
-            },
-            "value": "pick_option_1"
-          }
-        },
-        {
-          "type": "context",
-          "elements": [{
-            "type": "mrkdwn",
-            "text": `Quote by ${quotes[0].character} from The Lord of the Rings`
-          }]
-        },
-        {
-          "type": "divider"
-        },
-
-        {
-          "type": "section",
-          "text": {
-            "type": "mrkdwn",
-            "text": quotes[1].quote
-          },
-          "accessory": {
-            "type": "button",
-            "text": {
-              "type": "plain_text",
-              "emoji": true,
-              "text": "Pick Me"
-            },
-            "value": "pick_option_2"
-          }
-        },
-        {
-          "type": "context",
-          "elements": [{
-            "type": "mrkdwn",
-            "text": `Quote by ${quotes[1].character} from The Lord of the Rings`
-          }]
-        },
-        {
-          "type": "divider"
-        },
-
-        {
-          "type": "section",
-          "text": {
-            "type": "mrkdwn",
-            "text": quotes[2].quote
-          },
-          "accessory": {
-            "type": "button",
-            "text": {
-              "type": "plain_text",
-              "emoji": true,
-              "text": "Pick Me"
-            }, "value": {
-              "type": "pick_option",
-              "quote": quotes[2].quote,
-              "char": quotes[2].character,
-              "movie": 'The Lord of the Rings'
-            },
-          }
-        },
-        {
-          "type": "context",
-          "elements": [{
-            "type": "mrkdwn",
-            "text": `Quote by ${quotes[2].character} from The Lord of the Rings`
-          }]
-        },
-
-        {
-          "type": "divider"
-        },
-        {
-          "type": "actions",
-          "elements": [{
-            "type": "button",
-            "text": {
-              "type": "plain_text",
-              "emoji": true,
-              "text": "Shuffle Quotes"
-            },
-            "value": `get_more_quotes_${req.body.text}`
+              "type": "mrkdwn",
+              "text": `Here are some quotes we found matching "${req.body.text}"`
+            }
           },
           {
-            "type": "button",
-            "style": "danger",
+            "type": "divider"
+          },
+          {
+            "type": "section",
             "text": {
-              "type": "plain_text",
-              "text": "Cancel"
+              "type": "mrkdwn",
+              "text": quotes[0].quote
             },
-            "value": "cancel_quote"
+            "accessory": {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "emoji": true,
+                "text": "Pick Me"
+              },
+              "value": "pick_option_1"
+            }
+          },
+          {
+            "type": "context",
+            "elements": [{
+              "type": "mrkdwn",
+              "text": `Quote by ${quotes[0].character} from The Lord of the Rings`
+            }]
+          },
+          {
+            "type": "divider"
+          },
+
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": quotes[1].quote
+            },
+            "accessory": {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "emoji": true,
+                "text": "Pick Me"
+              },
+              "value": "pick_option_2"
+            }
+          },
+          {
+            "type": "context",
+            "elements": [{
+              "type": "mrkdwn",
+              "text": `Quote by ${quotes[1].character} from The Lord of the Rings`
+            }]
+          },
+          {
+            "type": "divider"
+          },
+
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": quotes[2].quote
+            },
+            "accessory": {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "emoji": true,
+                "text": "Pick Me"
+              },
+              "value": "pick_option_3"
+            }
+          },
+          {
+            "type": "context",
+            "elements": [{
+              "type": "mrkdwn",
+              "text": `Quote by ${quotes[2].character} from The Lord of the Rings`
+            }]
+          },
+
+          {
+            "type": "divider"
+          },
+          {
+            "type": "actions",
+            "elements": [{
+                "type": "button",
+                "text": {
+                  "type": "plain_text",
+                  "emoji": true,
+                  "text": "Shuffle Quotes"
+                },
+                "value": `get_more_quotes_${req.body.text}`
+              },
+              {
+                "type": "button",
+                "style": "danger",
+                "text": {
+                  "type": "plain_text",
+                  "text": "Cancel"
+                },
+                "value": "cancel_quote"
+              }
+            ]
           }
-          ]
-        }
         ]
       })
   }
@@ -230,7 +226,7 @@ app.post('/api/response', async (req, res) => {
         "delete_original": "true"
       })
     })
-  } else if (parsedPayload.actions[0].value.type === 'get_more_quotes') {
+  } else if (parsedPayload.actions[0].value.slice(0,15) === 'get_more_quotes') {
     // GET QUOTES FROM DB
     let quotes = await dbQuery('something')
     console.log(req.body)
@@ -242,139 +238,131 @@ app.post('/api/response', async (req, res) => {
       uri: parsedPayload.response_url,
       body: JSON.stringify({
         "blocks": [{
-          "type": "section",
-          "text": {
-            "type": "mrkdwn",
-            "text": `Here are some quotes we found matching "${parsedPayload.actions[0].value.slice(16)}"`
-          }
-        },
-        {
-          "type": "divider"
-        },
-        {
-          "type": "section",
-          "text": {
-            "type": "mrkdwn",
-            "text": quotes[0].quote
-          },
-          "accessory": {
-            "type": "button",
+            "type": "section",
             "text": {
-              "type": "plain_text",
-              "emoji": true,
-              "text": "Pick Me"
-            },
-            "value": "pick_option_1"
-          }
-        },
-        {
-          "type": "context",
-          "elements": [{
-            "type": "mrkdwn",
-            "text": `Quote by ${quotes[0].character} from The Lord of the Rings`
-          }]
-        },
-        {
-          "type": "divider"
-        },
-
-        {
-          "type": "section",
-          "text": {
-            "type": "mrkdwn",
-            "text": quotes[1].quote
-          },
-          "accessory": {
-            "type": "button",
-            "text": {
-              "type": "plain_text",
-              "emoji": true,
-              "text": "Pick Me"
-            },
-            "value": "pick_option_2"
-          }
-        },
-        {
-          "type": "context",
-          "elements": [{
-            "type": "mrkdwn",
-            "text": `Quote by ${quotes[1].character} from The Lord of the Rings`
-          }]
-        },
-        {
-          "type": "divider"
-        },
-
-        {
-          "type": "section",
-          "text": {
-            "type": "mrkdwn",
-            "text": quotes[2].quote
-          },
-          "accessory": {
-            "type": "button",
-            "text": {
-              "type": "plain_text",
-              "emoji": true,
-              "text": "Pick Me"
-            }
-          },
-          "value": {
-            "type": "pick_option",
-            "quote": quotes[2].quote,
-            "char": quotes[2].character,
-            "movie": 'The Lord of the Rings'
-          },
-        },
-        {
-          "type": "context",
-          "elements": [{
-            "type": "mrkdwn",
-            "text": `Quote by ${quotes[2].character} from The Lord of the Rings`
-          }]
-        },
-
-        {
-          "type": "divider"
-        },
-        {
-          "type": "actions",
-          "elements": [{
-            "type": "button",
-            "text": {
-              "type": "plain_text",
-              "emoji": true,
-              "text": "Shuffle Quotes"
-            },
-            "value": {
-              "type": `get_more_quotes`,
-              "value": parsedPayload.actions[0].value.type
+              "type": "mrkdwn",
+              "text": `Here are some quotes we found matching "${parsedPayload.actions[0].value.slice(16)}"`
             }
           },
           {
-            "type": "button",
-            "style": "danger",
+            "type": "divider"
+          },
+          {
+            "type": "section",
             "text": {
-              "type": "plain_text",
-              "text": "Cancel"
+              "type": "mrkdwn",
+              "text": quotes[0].quote
             },
-            "value": "cancel_quote"
+            "accessory": {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "emoji": true,
+                "text": "Pick Me"
+              },
+              "value": "pick_option_1"
+            }
+          },
+          {
+            "type": "context",
+            "elements": [{
+              "type": "mrkdwn",
+              "text": `Quote by ${quotes[0].character} from The Lord of the Rings`
+            }]
+          },
+          {
+            "type": "divider"
+          },
+
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": quotes[1].quote
+            },
+            "accessory": {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "emoji": true,
+                "text": "Pick Me"
+              },
+              "value": "pick_option_2"
+            }
+          },
+          {
+            "type": "context",
+            "elements": [{
+              "type": "mrkdwn",
+              "text": `Quote by ${quotes[1].character} from The Lord of the Rings`
+            }]
+          },
+          {
+            "type": "divider"
+          },
+
+          {
+            "type": "section",
+            "text": {
+              "type": "mrkdwn",
+              "text": quotes[2].quote
+            },
+            "accessory": {
+              "type": "button",
+              "text": {
+                "type": "plain_text",
+                "emoji": true,
+                "text": "Pick Me"
+              },
+              "value": "pick_option_3"
+            }
+          },
+          {
+            "type": "context",
+            "elements": [{
+              "type": "mrkdwn",
+              "text": `Quote by ${quotes[2].character} from The Lord of the Rings`
+            }]
+          },
+
+          {
+            "type": "divider"
+          },
+          {
+            "type": "actions",
+            "elements": [{
+                "type": "button",
+                "text": {
+                  "type": "plain_text",
+                  "emoji": true,
+                  "text": "Shuffle Quotes"
+                },
+                "value": `get_more_quotes_${parsedPayload.actions[0].value.slice(16)}`
+              },
+              {
+                "type": "button",
+                "style": "danger",
+                "text": {
+                  "type": "plain_text",
+                  "text": "Cancel"
+                },
+                "value": "cancel_quote"
+              }
+            ]
           }
-          ]
-        }
         ]
       })
     })
   } else {
-    if (parsedPayload.actions[0].value.type === 'pick_option') {
-      console.log(parsedPayload)
-      console.log("#############################")
-      console.log(parsedPayload.actions[0].value)
-      res.sendStatus(200)
-      let choice = `You chose option ${parsedPayload.actions[0].value.slice(12)}`
-      continueRequest(parsedPayload.response_url, parsedPayload.channel.id, choice)
-    }
+  if (parsedPayload.actions[0].value.slice(0, 8) === 'pick_opt') {
+    console.log(parsedPayload)
+    console.log("#############################")
+    console.log(parsedPayload.message)
+    res.sendStatus(200)
+    let choice = `You chose option ${parsedPayload.actions[0].value.slice(12)}`
+    continueRequest(parsedPayload.response_url, parsedPayload.channel.id, choice)
   }
+}
 }
 )
 
