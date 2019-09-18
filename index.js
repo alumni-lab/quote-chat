@@ -312,15 +312,15 @@ app.post('/api/response', async (req, res) => {
             "text": {
               "type": "plain_text",
               "emoji": true,
-              "text": "Pick Me",
-              "choice": {
-                "quote": quotes[2].quote,
-                "char": quotes[2].character,
-                "movie": 'The Lord of the Rings'
-              }
+              "text": "Pick Me"
             }
           },
-          "value": "pick_option_3",
+          "value": {
+            "type": "pick_option",
+            "quote": quotes[2].quote,
+            "char": quotes[2].character,
+            "movie": 'The Lord of the Rings'
+          },
         },
         {
           "type": "context",
@@ -359,10 +359,10 @@ app.post('/api/response', async (req, res) => {
       })
     })
   } else {
-    if (parsedPayload.actions[0].value.slice(0, 8) === 'pick_opt') {
+    if (parsedPayload.actions[0].value.type === 'pick_option') {
       console.log(parsedPayload)
       console.log("#############################")
-      console.log(parsedPayload.actions[0].text)
+      console.log(parsedPayload.actions[0].value)
       res.sendStatus(200)
       let choice = `You chose option ${parsedPayload.actions[0].value.slice(12)}`
       continueRequest(parsedPayload.response_url, parsedPayload.channel.id, choice)
