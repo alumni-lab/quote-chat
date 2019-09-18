@@ -60,6 +60,7 @@ async function dbQuery(quote) {
       }
       if (i >= quoteSplit.length) {
         console.log('NO RESULTS')
+        break;
       }   
       i++;
 
