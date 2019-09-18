@@ -21,8 +21,8 @@ client.connect();
 
 async function dbQuery(quote) {
   let quoteList = [];
-  let res = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quote}%' limit 3;`);
-  console.log(res.rows)  
+  let res = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quote}%' LIMIT 3;`);
+  console.log(res.rows.length)  
   for (let row of res.rows) {
     console.log(row)
     let quo = row
