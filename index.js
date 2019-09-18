@@ -360,12 +360,11 @@ app.post('/api/response', async (req, res) => {
   } else {
     if (parsedPayload.actions[0].value.slice(0, 8) === 'pick_opt') {
       console.log(parsedPayload)
-      console.log("#############################")
-      console.log(parsedPayload.actions[0])
       const yourQuote = await getDetails(parsedPayload.actions[0].value.slice(12))
-      console.log(yourQuote)
+      console.log("#############################")
+      console.log(yourQuote.quote)
       res.sendStatus(200)
-      let choice = yourQuote
+      let choice = yourQuote.quote
       continueRequest(parsedPayload.response_url, parsedPayload.channel.id, choice)
     }
   }
