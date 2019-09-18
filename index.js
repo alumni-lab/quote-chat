@@ -169,8 +169,12 @@ app.post('/quote', async (req, res) => {
               "type": "plain_text",
               "emoji": true,
               "text": "Pick Me"
+            }, "value": {
+              "type": "pick_option",
+              "quote": quotes[2].quote,
+              "char": quotes[2].character,
+              "movie": 'The Lord of the Rings'
             },
-            "value": "pick_option_3"
           }
         },
         {
