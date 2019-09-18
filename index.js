@@ -51,12 +51,15 @@ async function dbQuery(quote) {
     const quoteSplit = quote.split(' ')
     let i = 0
     while (quoteList.length < 30) {
-      let more = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quoteSplit[i]}%';`);
-      for (let row of more.rows) {
-        let quo = row
-        const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
-        quo.character = result.rows[0].name
-        quoteList.push(quo)
+      if (quoteSplit[i].length > 3) {
+        //only check words with length greater than 3
+        let more = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quoteSplit[i]}%';`);
+        for (let row of more.rows) {
+          let quo = row
+          const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
+          quo.character = result.rows[0].name
+          quoteList.push(quo)
+        }
       }
       if (i >= quoteSplit.length) {
         // If not enough matches found just grab the first bunch as a failsafe
@@ -67,15 +70,15 @@ async function dbQuery(quote) {
           quo.character = result.rows[0].name
           quoteList.push(quo)
         }
-      }   
+      }
       i++;
 
     }
   }
-  
+
   let shuffled = shuffle(quoteList);
-  
-  return shuffled.slice(0,3)
+
+  return shuffled.slice(0, 3)
 
 }
 async function getDetails(id) {
