@@ -29,7 +29,10 @@ async function dbQuery(quote) {
     // console.log(result.rows[0].name)
     quo.character = result.rows[0].name
     quoteList.push(quo)
-
+  }
+  async function getDetails(id) {
+  let res = await client.query(`SELECT * FROM quotes WHERE id = ${id};`);
+    return res
   }
 
   return quoteList
@@ -359,8 +362,9 @@ app.post('/api/response', async (req, res) => {
     console.log(parsedPayload)
     console.log("#############################")
     console.log(parsedPayload.actions[0])
+    const yourQuote = getDetails(parsedPayload.actions[0].value.slice(12))
     res.sendStatus(200)
-    let choice = `You chose option ${parsedPayload.actions[0].value.slice(12)}`
+    let choice = yourQuote.quote
     continueRequest(parsedPayload.response_url, parsedPayload.channel.id, choice)
   }
 }
