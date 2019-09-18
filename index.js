@@ -169,8 +169,9 @@ app.post('/quote', async (req, res) => {
                 "type": "plain_text",
                 "emoji": true,
                 "text": "Pick Me"
-              },
-              "value": "pick_option_3"
+              },              
+              "value": `pick_option_${quotes[2].id}`
+
             }
           },
           {
@@ -314,7 +315,7 @@ app.post('/api/response', async (req, res) => {
                 "emoji": true,
                 "text": "Pick Me"
               },
-              "value": "pick_option_3"
+              "value": `pick_option_${quotes[2].id}`
             }
           },
           {
@@ -327,14 +328,6 @@ app.post('/api/response', async (req, res) => {
 
           {
             "type": "divider"
-          },
-          {
-            "type": "attachments",
-            "elements": [{
-                  "quote": quotes[2].quote,
-                  "char": quotes[2].character,
-                  "movie": 'The Lord of the Rings'
-            }]
           },
           {
             "type": "actions",
