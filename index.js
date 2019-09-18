@@ -345,6 +345,7 @@ app.post('/api/response', async (req, res) => {
             "value": {
               "type": `get_more_quotes`,
               "value": parsedPayload.actions[0].value.type
+            }
           },
           {
             "type": "button",
