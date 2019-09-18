@@ -47,7 +47,7 @@ async function dbQuery(quote) {
     quo.character = result.rows[0].name
     quoteList.push(quo)
   }
-  if (quoteList.length < 3) {
+  if (quoteList.length < 4) {
     const quoteSplit = quote.split(' ')
     let i = 0
     while (quoteList.length < 30) {
