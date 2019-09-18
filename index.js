@@ -65,7 +65,7 @@ async function dbQuery(quote) {
         }
       } else {
 
-        let evenMore = await client.query(`SELECT * FROM quotes LIMIT ${30 - quoteList.length}';`);
+        let evenMore = await client.query(`SELECT * FROM quotes LIMIT ${30 - quoteList.length};`);
         for (let row of evenMore.rows) {
           let quo = row
           const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
