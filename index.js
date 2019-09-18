@@ -19,9 +19,27 @@ const client = new Client({
 
 client.connect();
 
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
 async function dbQuery(quote) {
   let quoteList = [];
-  let res = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quote}%' LIMIT 3;`);
+  let res = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quote}%' LIMIT 12;`);
   for (let row of res.rows) {
     console.log(row)
     let quo = row
@@ -32,7 +50,7 @@ async function dbQuery(quote) {
   if (quoteList.length < 3) {
     const quoteSplit = quote.split(' ')
     let i = 0
-    while (quoteList.length < 3) {
+    while (quoteList.length < 12) {
       let more = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quoteSplit[i]}%' LIMIT ${3 - quoteList.length};`);
       for (let row of more.rows) {
         let quo = row
@@ -47,8 +65,10 @@ async function dbQuery(quote) {
 
     }
   }
-
-  return quoteList
+  
+  let shuffled = shuffle(quoteList);
+  
+  return shuffled.slice(0,3)
 
 }
 async function getDetails(id) {
