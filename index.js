@@ -31,10 +31,21 @@ async function dbQuery(quote) {
   }
   if (quoteList.length < 3) {
     const quoteSplit = quote.split(' ')
-    console.log(quoteSplit)
-    // while (quoteList.length < 3) {
-      // let more = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quote}%' LIMIT 3;`);
-    // }
+    let i = quoteSplit.length
+    while (quoteList.length < 3) {
+      let more = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quoteSplit[i]}%' LIMIT ${3 - quoteList.length};`);
+      for (let row of more.rows) {
+        let quo = row
+        const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
+        quo.character = result.rows[0].name
+        quoteList.push(quo)
+      }
+      if (i === 0) {
+        console.log('NO RESULTS')
+      }   
+      i--;
+
+    }
   }
 
   return quoteList
