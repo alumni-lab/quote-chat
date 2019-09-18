@@ -51,7 +51,7 @@ async function dbQuery(quote) {
     const quoteSplit = quote.split(' ')
     let i = 0
     while (quoteList.length < 30) {
-      if (quoteSplit.length > 0) {
+      if (i < quoteSplit.length) {
 
         if (quoteSplit[i].length > 3) {
           //only check words with length greater than 3
