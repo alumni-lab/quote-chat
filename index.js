@@ -31,7 +31,7 @@ async function dbQuery(quote) {
   }
   if (quoteList.length < 3) {
     const quoteSplit = quote.split(' ')
-    let i = quoteSplit.length
+    let i = 0
     while (quoteList.length < 3) {
       let more = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quoteSplit[i]}%' LIMIT ${3 - quoteList.length};`);
       for (let row of more.rows) {
@@ -40,10 +40,10 @@ async function dbQuery(quote) {
         quo.character = result.rows[0].name
         quoteList.push(quo)
       }
-      if (i === 0) {
+      if (i >= quoteSplit.length) {
         console.log('NO RESULTS')
       }   
-      i--;
+      i++;
 
     }
   }
