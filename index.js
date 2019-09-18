@@ -21,12 +21,11 @@ client.connect();
 
 async function dbQuery(quote) {
   let quoteList = [];
-  let res = await client.query('SELECT * FROM quotes limit 3;');
+  let res = await client.query(`SELECT * FROM quotes WHERE quote like ${quote} limit 3;`);
   // if (err) throw err;
   for (let row of res.rows) {
     let quo = row
     const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
-    // console.log(result.rows[0].name)
     quo.character = result.rows[0].name
     quoteList.push(quo)
   }
@@ -238,8 +237,7 @@ app.post('/api/response', async (req, res) => {
     })
   } else if (parsedPayload.actions[0].value.slice(0, 15) === 'get_more_quotes') {
     // GET QUOTES FROM DB
-    let quotes = await dbQuery('something')
-    console.log(req.body)
+    let quotes = await dbQuery(parsedPayload.actions[0].value.slice(16))
     res.status(200)
     request.post({
       headers: {
