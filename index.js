@@ -362,9 +362,10 @@ app.post('/api/response', async (req, res) => {
       console.log(parsedPayload)
       console.log("#############################")
       console.log(parsedPayload.actions[0])
-      const yourQuote = getDetails(parsedPayload.actions[0].value.slice(12))
+      const yourQuote = await getDetails(parsedPayload.actions[0].value.slice(12))
+      console.log(yourQuote)
       res.sendStatus(200)
-      let choice = yourQuote.quote
+      let choice = yourQuote
       continueRequest(parsedPayload.response_url, parsedPayload.channel.id, choice)
     }
   }
