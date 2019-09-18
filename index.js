@@ -315,8 +315,10 @@ app.post('/api/response', async (req, res) => {
                 "text": "Pick Me"
               },
               "value": "pick_option_3",
-              "choice": { quote: quotes[2].quote, char: quotes[2].character, movie: 'The Lord of the Rings'}
-
+              "choice": { 
+                "quote": quotes[2].quote, 
+                "char": quotes[2].character, 
+                "movie": 'The Lord of the Rings'}
             }
           },
           {
