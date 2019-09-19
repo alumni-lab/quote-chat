@@ -116,7 +116,7 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie) {
     body: JSON.stringify({
       "channel": reply_to,
       "as_user": false,
-      "username": 
+      "username": 'quote-chat',
       "delete_original": "true",
       "blocks": [{
         "type": "section",
