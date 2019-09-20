@@ -19,25 +19,83 @@ const client = new Client({
 
 client.connect();
 
+function shuffle(array) {
+  var currentIndex = array.length, temporaryValue, randomIndex;
+
+  // While there remain elements to shuffle...
+  while (0 !== currentIndex) {
+
+    // Pick a remaining element...
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+
+    // And swap it with the current element.
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
+
+  return array;
+}
 async function dbQuery(quote) {
   let quoteList = [];
-  let res = await client.query('SELECT * FROM quotes limit 3;');
-  // if (err) throw err;
+  let res = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quote}%' LIMIT 12;`);
   for (let row of res.rows) {
+    console.log(row)
     let quo = row
     const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
-    // console.log(result.rows[0].name)
     quo.character = result.rows[0].name
     quoteList.push(quo)
+  }
+  if (quoteList.length < 4) {
+    const quoteSplit = quote.split(' ')
+    let i = 0
+    while (quoteList.length < 30) {
+      if (i < quoteSplit.length) {
+
+        if (quoteSplit[i].length > 3) {
+          //only check words with length greater than 3
+          let more = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quoteSplit[i]}%';`);
+          for (let row of more.rows) {
+            let quo = row
+            const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
+            quo.character = result.rows[0].name
+            quoteList.push(quo)
+          }
+        }
+      } else {
+
+        let evenMore = await client.query(`SELECT * FROM quotes LIMIT ${30 - quoteList.length};`);
+        for (let row of evenMore.rows) {
+          let quo = row
+          const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
+          quo.character = result.rows[0].name
+          quoteList.push(quo)
+        }
+      }
+      i++;
+    }
+
 
   }
 
-  return quoteList
+  let shuffled = shuffle(quoteList);
+
+  return shuffled.slice(0, 3)
 
 }
-// dbQuery('something')
 
-function continueRequest(clearUrl, reply_to, textToQuote) {
+async function getDetails(id) {
+  let res = await client.query(`SELECT * FROM quotes WHERE id = ${id};`);
+  return res
+}
+async function getChar(id) {
+  let res = await client.query(`SELECT * FROM characters WHERE id = ${id};`);
+
+  return res.rows[0].name
+}
+
+function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie) {
   // clear origin message
   request.post({
     headers: {
@@ -60,19 +118,19 @@ function continueRequest(clearUrl, reply_to, textToQuote) {
       "as_user": true,
       "delete_original": "true",
       "blocks": [{
-          "type": "section",
-          "text": {
-            "type": "mrkdwn",
-            "text": `${textToQuote}`
-          }
-        },
-        {
-          "type": "context",
-          "elements": [{
-            "type": "mrkdwn",
-            "text": "_Quote author_ from *Movie name*"
-          }]
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": `${quoteText}`
         }
+      },
+      {
+        "type": "context",
+        "elements": [{
+          "type": "mrkdwn",
+          "text": `_${quoteChar}_ from *${quoteMovie}*`
+        }]
+      }
       ]
     })
   }, function (error) {
@@ -94,118 +152,121 @@ app.post('/quote', async (req, res) => {
       .type('application/json')
       .send({
         "blocks": [{
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": `Here are some quotes we found matching "${req.body.text}"`
-            }
-          },
-          {
-            "type": "divider"
-          },
-          {
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": quotes[0].quote
-            },
-            "accessory": {
-              "type": "button",
-              "text": {
-                "type": "plain_text",
-                "emoji": true,
-                "text": "Pick Me"
-              },
-              "value": "pick_option_1"
-            }
-          },
-          {
-            "type": "context",
-            "elements": [{
-              "type": "mrkdwn",
-              "text": `Quote by ${quotes[0].character} from The Lord of the Rings`
-            }]
-          },
-          {
-            "type": "divider"
-          },
-
-          {
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": quotes[1].quote
-            },
-            "accessory": {
-              "type": "button",
-              "text": {
-                "type": "plain_text",
-                "emoji": true,
-                "text": "Pick Me"
-              },
-              "value": "pick_option_2"
-            }
-          },
-          {
-            "type": "context",
-            "elements": [{
-              "type": "mrkdwn",
-              "text": `Quote by ${quotes[1].character} from The Lord of the Rings`
-            }]
-          },
-          {
-            "type": "divider"
-          },
-
-          {
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": quotes[2].quote
-            },
-            "accessory": {
-              "type": "button",
-              "text": {
-                "type": "plain_text",
-                "emoji": true,
-                "text": "Pick Me"
-              },
-              "value": "pick_option_3"
-            }
-          },
-          {
-            "type": "context",
-            "elements": [{
-              "type": "mrkdwn",
-              "text": `Quote by ${quotes[2].character} from The Lord of the Rings`
-            }]
-          },
-
-          {
-            "type": "divider"
-          },
-          {
-            "type": "actions",
-            "elements": [{
-                "type": "button",
-                "text": {
-                  "type": "plain_text",
-                  "emoji": true,
-                  "text": "Shuffle Quotes"
-                },
-                "value": `get_more_quotes_${req.body.text}`
-              },
-              {
-                "type": "button",
-                "style": "danger",
-                "text": {
-                  "type": "plain_text",
-                  "text": "Cancel"
-                },
-                "value": "cancel_quote"
-              }
-            ]
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": `Here are some quotes we found matching "${req.body.text}"`
           }
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": quotes[0].quote
+          },
+          "accessory": {
+            "type": "button",
+            "text": {
+              "type": "plain_text",
+              "emoji": true,
+              "text": "Pick Me"
+            },
+            "value": `pick_option_${quotes[0].id}`
+
+          }
+        },
+        {
+          "type": "context",
+          "elements": [{
+            "type": "mrkdwn",
+            "text": `Quote by ${quotes[0].character} from The Lord of the Rings`
+          }]
+        },
+        {
+          "type": "divider"
+        },
+
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": quotes[1].quote
+          },
+          "accessory": {
+            "type": "button",
+            "text": {
+              "type": "plain_text",
+              "emoji": true,
+              "text": "Pick Me"
+            },
+            "value": `pick_option_${quotes[1].id}`
+
+          }
+        },
+        {
+          "type": "context",
+          "elements": [{
+            "type": "mrkdwn",
+            "text": `Quote by ${quotes[1].character} from The Lord of the Rings`
+          }]
+        },
+        {
+          "type": "divider"
+        },
+
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": quotes[2].quote
+          },
+          "accessory": {
+            "type": "button",
+            "text": {
+              "type": "plain_text",
+              "emoji": true,
+              "text": "Pick Me"
+            },
+            "value": `pick_option_${quotes[2].id}`
+
+          }
+        },
+        {
+          "type": "context",
+          "elements": [{
+            "type": "mrkdwn",
+            "text": `Quote by ${quotes[2].character} from The Lord of the Rings`
+          }]
+        },
+
+        {
+          "type": "divider"
+        },
+        {
+          "type": "actions",
+          "elements": [{
+            "type": "button",
+            "text": {
+              "type": "plain_text",
+              "emoji": true,
+              "text": "Shuffle Quotes"
+            },
+            "value": `get_more_quotes_${req.body.text}`
+          },
+          {
+            "type": "button",
+            "style": "danger",
+            "text": {
+              "type": "plain_text",
+              "text": "Cancel"
+            },
+            "value": "cancel_quote"
+          }
+          ]
+        }
         ]
       })
   }
@@ -226,10 +287,9 @@ app.post('/api/response', async (req, res) => {
         "delete_original": "true"
       })
     })
-  } else if (parsedPayload.actions[0].value.slice(0,15) === 'get_more_quotes') {
+  } else if (parsedPayload.actions[0].value.slice(0, 15) === 'get_more_quotes') {
     // GET QUOTES FROM DB
-    let quotes = await dbQuery('something')
-    console.log(req.body)
+    let quotes = await dbQuery(parsedPayload.actions[0].value.slice(16))
     res.status(200)
     request.post({
       headers: {
@@ -238,128 +298,131 @@ app.post('/api/response', async (req, res) => {
       uri: parsedPayload.response_url,
       body: JSON.stringify({
         "blocks": [{
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": `Here are some quotes we found matching "${parsedPayload.actions[0].value.slice(16)}"`
-            }
-          },
-          {
-            "type": "divider"
-          },
-          {
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": quotes[0].quote
-            },
-            "accessory": {
-              "type": "button",
-              "text": {
-                "type": "plain_text",
-                "emoji": true,
-                "text": "Pick Me"
-              },
-              "value": "pick_option_1"
-            }
-          },
-          {
-            "type": "context",
-            "elements": [{
-              "type": "mrkdwn",
-              "text": `Quote by ${quotes[0].character} from The Lord of the Rings`
-            }]
-          },
-          {
-            "type": "divider"
-          },
-
-          {
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": quotes[1].quote
-            },
-            "accessory": {
-              "type": "button",
-              "text": {
-                "type": "plain_text",
-                "emoji": true,
-                "text": "Pick Me"
-              },
-              "value": "pick_option_2"
-            }
-          },
-          {
-            "type": "context",
-            "elements": [{
-              "type": "mrkdwn",
-              "text": `Quote by ${quotes[1].character} from The Lord of the Rings`
-            }]
-          },
-          {
-            "type": "divider"
-          },
-
-          {
-            "type": "section",
-            "text": {
-              "type": "mrkdwn",
-              "text": quotes[2].quote
-            },
-            "accessory": {
-              "type": "button",
-              "text": {
-                "type": "plain_text",
-                "emoji": true,
-                "text": "Pick Me"
-              },
-              "value": "pick_option_3"
-            }
-          },
-          {
-            "type": "context",
-            "elements": [{
-              "type": "mrkdwn",
-              "text": `Quote by ${quotes[2].character} from The Lord of the Rings`
-            }]
-          },
-
-          {
-            "type": "divider"
-          },
-          {
-            "type": "actions",
-            "elements": [{
-                "type": "button",
-                "text": {
-                  "type": "plain_text",
-                  "emoji": true,
-                  "text": "Shuffle Quotes"
-                },
-                "value": `get_more_quotes_${parsedPayload.actions[0].value.slice(16)}`
-              },
-              {
-                "type": "button",
-                "style": "danger",
-                "text": {
-                  "type": "plain_text",
-                  "text": "Cancel"
-                },
-                "value": "cancel_quote"
-              }
-            ]
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": `Here are some quotes we found matching "${parsedPayload.actions[0].value.slice(16)}"`
           }
+        },
+        {
+          "type": "divider"
+        },
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": quotes[0].quote
+          },
+          "accessory": {
+            "type": "button",
+            "text": {
+              "type": "plain_text",
+              "emoji": true,
+              "text": "Pick Me"
+            },
+            "value": `pick_option_${quotes[0].id}`
+          }
+        },
+        {
+          "type": "context",
+          "elements": [{
+            "type": "mrkdwn",
+            "text": `Quote by ${quotes[0].character} from The Lord of the Rings`
+          }]
+        },
+        {
+          "type": "divider"
+        },
+
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": quotes[1].quote
+          },
+          "accessory": {
+            "type": "button",
+            "text": {
+              "type": "plain_text",
+              "emoji": true,
+              "text": "Pick Me"
+            },
+            "value": `pick_option_${quotes[1].id}`
+          }
+        },
+        {
+          "type": "context",
+          "elements": [{
+            "type": "mrkdwn",
+            "text": `Quote by ${quotes[1].character} from The Lord of the Rings`
+          }]
+        },
+        {
+          "type": "divider"
+        },
+
+        {
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": quotes[2].quote
+          },
+          "accessory": {
+            "type": "button",
+            "text": {
+              "type": "plain_text",
+              "emoji": true,
+              "text": "Pick Me"
+            },
+            "value": `pick_option_${quotes[2].id}`
+          }
+        },
+        {
+          "type": "context",
+          "elements": [{
+            "type": "mrkdwn",
+            "text": `Quote by ${quotes[2].character} from The Lord of the Rings`
+          }]
+        },
+
+        {
+          "type": "divider"
+        },
+        {
+          "type": "actions",
+          "elements": [{
+            "type": "button",
+            "text": {
+              "type": "plain_text",
+              "emoji": true,
+              "text": "Shuffle Quotes"
+            },
+            "value": `get_more_quotes_${parsedPayload.actions[0].value.slice(16)}`
+          },
+          {
+            "type": "button",
+            "style": "danger",
+            "text": {
+              "type": "plain_text",
+              "text": "Cancel"
+            },
+            "value": "cancel_quote"
+          }
+          ]
+        }
         ]
       })
     })
   } else {
-  if (parsedPayload.actions[0].value.slice(0, 8) === 'pick_opt') {
-    res.sendStatus(200)
-    let choice = `You chose option ${parsedPayload.actions[0].value.slice(12)}`
-    continueRequest(parsedPayload.response_url, parsedPayload.channel.id, choice)
+    if (parsedPayload.actions[0].value.slice(0, 8) === 'pick_opt') {
+      const yourQuote = await getDetails(parsedPayload.actions[0].value.slice(12))
+      res.sendStatus(200)
+      const quoteQuote = yourQuote.rows[0].quote
+      const quoteChar = await getChar(yourQuote.rows[0].character_id)
+      const quoteMovie = 'The Lord of the Rings'
+      continueRequest(parsedPayload.response_url, parsedPayload.channel.id, quoteQuote, quoteChar, quoteMovie)
+    }
   }
-}
 }
 )
 
