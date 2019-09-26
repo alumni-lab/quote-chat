@@ -18,8 +18,8 @@ app.get('/auth', async (req, res) => {
   }, 3000);
 })
 
-async function getBotId(code) {
-  const res = await request.post({
+ function getBotId(code) {
+    request.post({
     headers: {
       'content-type': 'application/x-www-form-urlencoded/json'
     },
@@ -29,11 +29,9 @@ async function getBotId(code) {
       "client_secret": clientSecret,
       "code": code
     })
-  }, function (error) {
-    console.log(error);
+  }, function (res) {
+    console.log(res);
   })
-
-  console.log("###############\n", res)
 }
 
 const {
