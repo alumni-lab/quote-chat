@@ -9,7 +9,7 @@ const port = process.env.PORT || 5000
 // const qcToken = process.env.QUOTE_CHAT_TOKEN
 const clientID = process.env.CLIENT_ID
 const clientSecret = process.env.CLIENT_SECRET
-app.post('/auth', async (req, res) => {
+app.get('/auth', async (req, res) => {
   console.log(req)
   console.log(req.get)
 })
