@@ -131,7 +131,7 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, u
         "type": "section",
         "text": {
           "type": "mrkdwn",
-          "text": `${quoteText}`
+          "text": `"${quoteText}"`
         }
       },
       {
@@ -157,7 +157,6 @@ app.post('/quote', async (req, res) => {
   } else {
     // GET QUOTES FROM DB
     let quotes = await dbQuery(req.body.text);
-    console.log(req.body)
     res.status(200)
       .type('application/json')
       .send({
@@ -286,7 +285,6 @@ app.post('/quote', async (req, res) => {
 
 app.post('/api/response', async (req, res) => {
   const parsedPayload = JSON.parse(req.body.payload)
-  console.log("############################", parsedPayload.user)
   const userName = parsedPayload.user.id
   if (parsedPayload.actions[0].value === 'cancel_quote') {
     res.sendStatus(200)
