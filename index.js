@@ -118,7 +118,16 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, u
       "username": `Quote-Chat`,
       "reply_broadcast": "true",
       "delete_original": "true",
-      "blocks": [{
+      "blocks": [
+        {
+          "type": "context",
+          "elements": [{
+            "type": "mrkdwn",
+            "text": `_<@${userName}> posted:_ `
+          }]
+        },
+        {
+        
         "type": "section",
         "text": {
           "type": "mrkdwn",
