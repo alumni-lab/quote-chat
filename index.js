@@ -29,8 +29,8 @@ app.get('/auth', async (req, res) => {
       "client_secret": clientSecret,
       "code": code
     })
-  }, function (res) {
-    console.log(res);
+  }, function (error, res) {
+    console.log(error, res);
   })
 }
 
