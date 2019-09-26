@@ -131,7 +131,7 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, u
         "type": "section",
         "text": {
           "type": "mrkdwn",
-          "text": `_<@${userName}> posted:_ \n\n${quoteText}`
+          "text": `${quoteText}`
         }
       },
       {
