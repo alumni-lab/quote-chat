@@ -33,7 +33,7 @@ async function getBotId(code) {
     console.log(error);
   })
 
-  console.log("###############\n" res)
+  console.log("###############\n", res)
 }
 
 const {
