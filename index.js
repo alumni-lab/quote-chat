@@ -109,7 +109,7 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, u
   request.post({
     headers: {
       'content-type': 'application/json',
-      'Authorization': `Bearer ${qcToken}`
+      // 'Authorization': `Bearer ${qcToken}`
     },
     uri: 'https://slack.com/api/chat.postMessage',
     body: JSON.stringify({
