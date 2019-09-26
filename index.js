@@ -148,7 +148,7 @@ app.post('/quote', async (req, res) => {
   } else {
     // GET QUOTES FROM DB
     let quotes = await dbQuery(req.body.text);
-    console.log(req.body.user_id)
+    console.log(req.body)
     res.status(200)
       .type('application/json')
       .send({
