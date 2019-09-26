@@ -94,7 +94,7 @@ async function getChar(id) {
   return res.rows[0].name
 }
 
-function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, userName) {
+function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, userID) {
   // clear origin message
   request.post({
     headers: {
@@ -115,14 +115,14 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, u
     body: JSON.stringify({
       "channel": reply_to,
       "as_user": false,
-      "username": `Quote-Chat`,
+      "username": `<${userID}> Quote-Chat`,
       "reply_broadcast": "true",
       "delete_original": "true",
       "blocks": [{
         "type": "section",
         "text": {
           "type": "mrkdwn",
-          "text": `<${userName}> _posted_ \n${quoteText}`
+          "text": `<${userID}> posted \n${quoteText}`
         }
       },
       {
