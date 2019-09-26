@@ -12,8 +12,10 @@ const clientSecret = process.env.CLIENT_SECRET
 app.get('/auth', async (req, res) => {
   console.log(req.query.code)
   let stupidThing = await getBotId(req.query.code)
-
-  console.log(stupidThing)
+  setTimeout(() => {
+    
+    console.log(stupidThing)
+  }, 3000);
 })
 
 async function getBotId(code) {
