@@ -94,7 +94,7 @@ async function getChar(id) {
   return res.rows[0].name
 }
 
-function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie) {
+function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, userName) {
   // clear origin message
   request.post({
     headers: {
@@ -115,7 +115,7 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie) {
     body: JSON.stringify({
       "channel": reply_to,
       "as_user": false,
-      "username": '',
+      "username": userName,
       "delete_original": "true",
       "blocks": [{
         "type": "section",
@@ -277,6 +277,7 @@ app.post('/quote', async (req, res) => {
 app.post('/api/response', async (req, res) => {
   const parsedPayload = JSON.parse(req.body.payload)
   console.log("############################", parsedPayload.user)
+  const userName = parsedPayload.user.username
   if (parsedPayload.actions[0].value === 'cancel_quote') {
     res.sendStatus(200)
     request.post({
@@ -421,7 +422,7 @@ app.post('/api/response', async (req, res) => {
       const quoteQuote = yourQuote.rows[0].quote
       const quoteChar = await getChar(yourQuote.rows[0].character_id)
       const quoteMovie = 'The Lord of the Rings'
-      continueRequest(parsedPayload.response_url, parsedPayload.channel.id, quoteQuote, quoteChar, quoteMovie)
+      continueRequest(parsedPayload.response_url, parsedPayload.channel.id, quoteQuote, quoteChar, quoteMovie, userName)
     }
   }
 }
