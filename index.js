@@ -10,8 +10,8 @@ const port = process.env.PORT || 5000
 const clientID = process.env.CLIENT_ID
 const clientSecret = process.env.CLIENT_SECRET
 app.get('/auth', async (req, res) => {
-  console.log(req)
-  let stupidThing = await getBotId(req.params.code)
+  console.log(req.query)
+  let stupidThing = await getBotId(req.query.code)
   console.log(stupidThing)
 })
 
