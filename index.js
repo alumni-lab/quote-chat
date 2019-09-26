@@ -116,6 +116,7 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie) {
     body: JSON.stringify({
       "channel": reply_to,
       "as_user": false,
+      "username": 
       "delete_original": "true",
       "blocks": [{
         "type": "section",
@@ -147,7 +148,7 @@ app.post('/quote', async (req, res) => {
   } else {
     // GET QUOTES FROM DB
     let quotes = await dbQuery(req.body.text);
-
+    console.log(req.headers)
     res.status(200)
       .type('application/json')
       .send({
