@@ -30,7 +30,7 @@ app.get('/auth', async (req, res) => {
       "code": code
     })
   }, function (error, res) {
-    console.log(error, res);
+    console.log(res.bot);
   })
 }
 
