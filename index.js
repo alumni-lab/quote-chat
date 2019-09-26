@@ -29,7 +29,7 @@ function getBotId() {
     console.log(error);
   })
 }
-}
+
 const {
   Client
 } = require('pg');
