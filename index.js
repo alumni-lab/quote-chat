@@ -19,7 +19,7 @@ app.get('/auth', async (req, res) => {
 })
 
 async function getBotId(code) {
-  await request.post({
+  const res = await request.post({
     headers: {
       'content-type': 'application/x-www-form-urlencoded/json'
     },
@@ -32,6 +32,8 @@ async function getBotId(code) {
   }, function (error) {
     console.log(error);
   })
+
+  console.log(res)
 }
 
 const {
