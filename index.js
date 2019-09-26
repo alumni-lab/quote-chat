@@ -41,7 +41,6 @@ async function dbQuery(quote) {
   let quoteList = [];
   let res = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quote}%' LIMIT 12;`);
   for (let row of res.rows) {
-    console.log(row)
     let quo = row
     const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
     quo.character = result.rows[0].name
@@ -148,7 +147,7 @@ app.post('/quote', async (req, res) => {
   } else {
     // GET QUOTES FROM DB
     let quotes = await dbQuery(req.body.text);
-    console.log(req.body)
+    console.log(req.body.user_id, req.body.username)
     res.status(200)
       .type('application/json')
       .send({
@@ -277,6 +276,7 @@ app.post('/quote', async (req, res) => {
 
 app.post('/api/response', async (req, res) => {
   const parsedPayload = JSON.parse(req.body.payload)
+  console.log("############################", req.body)
   if (parsedPayload.actions[0].value === 'cancel_quote') {
     res.sendStatus(200)
     request.post({
