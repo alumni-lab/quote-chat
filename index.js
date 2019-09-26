@@ -10,11 +10,11 @@ const port = process.env.PORT || 5000
 const clientID = process.env.CLIENT_ID
 const clientSecret = process.env.CLIENT_SECRET
 app.get('/auth', async (req, res) => {
-  console.log(req)
-  console.log(req.get)
+  let stupidThing = await getBotId(req.params.code)
+  console.log(stupidThing)
 })
 
-function getBotId() {
+function getBotId(code) {
   request.post({
     headers: {
       'content-type': 'application/x-www-form-urlencoded/json'
