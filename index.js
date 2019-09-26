@@ -12,11 +12,12 @@ const clientSecret = process.env.CLIENT_SECRET
 app.get('/auth', async (req, res) => {
   console.log(req.query.code)
   let stupidThing = await getBotId(req.query.code)
+
   console.log(stupidThing)
 })
 
-function getBotId(code) {
-  request.post({
+async function getBotId(code) {
+  await request.post({
     headers: {
       'content-type': 'application/x-www-form-urlencoded/json'
     },
