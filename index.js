@@ -6,8 +6,30 @@ app.use(bodyParser.urlencoded({
   extended: false
 }))
 const port = process.env.PORT || 5000
-const qcToken = process.env.QUOTE_CHAT_TOKEN
+// const qcToken = process.env.QUOTE_CHAT_TOKEN
+const clientID = process.env.CLIENT_ID
+const clientSecret = process.env.CLIENT_SECRET
+app.post('/auth', async (req, res) => {
+  console.log(req)
+  console.log(req.get)
+})
 
+function getBotId() {
+  request.post({
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded/json'
+    },
+    uri: "https://slack.com/api/oauth.access",
+    body: JSON.stringify({
+      "client_id": clientID,
+      "client_secret": clientSecret,
+      "code": code
+    })
+  }, function (error) {
+    console.log(error);
+  })
+}
+}
 const {
   Client
 } = require('pg');
@@ -109,7 +131,7 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, u
   request.post({
     headers: {
       'content-type': 'application/json',
-      // 'Authorization': `Bearer ${qcToken}`
+      'Authorization': `Bearer ${qcToken}`
     },
     uri: 'https://slack.com/api/chat.postMessage',
     body: JSON.stringify({
