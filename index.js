@@ -115,14 +115,14 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, u
     body: JSON.stringify({
       "channel": reply_to,
       "as_user": false,
-      "username": `from Quote-Chat`,
+      "username": `Quote-Chat`,
       "reply_broadcast": "true",
       "delete_original": "true",
       "blocks": [{
         "type": "section",
         "text": {
           "type": "mrkdwn",
-          "text": `<${userName}> posted \n${quoteText}`
+          "text": `*<${userName}> posted* \n${quoteText}`
         }
       },
       {
