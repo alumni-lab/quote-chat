@@ -94,7 +94,7 @@ async function getChar(id) {
   return res.rows[0].name
 }
 
-function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, userID) {
+function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, userName) {
   // clear origin message
   request.post({
     headers: {
@@ -115,14 +115,14 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, u
     body: JSON.stringify({
       "channel": reply_to,
       "as_user": false,
-      "username": `<${userID}> Quote-Chat`,
+      "username": `<@${userName}> from Quote-Chat`,
       "reply_broadcast": "true",
       "delete_original": "true",
       "blocks": [{
         "type": "section",
         "text": {
           "type": "mrkdwn",
-          "text": `<${userID}> posted \n${quoteText}`
+          "text": `_<@${userName}> posted_ \n${quoteText}`
         }
       },
       {
@@ -148,6 +148,7 @@ app.post('/quote', async (req, res) => {
   } else {
     // GET QUOTES FROM DB
     let quotes = await dbQuery(req.body.text);
+    console.log(req.body)
     res.status(200)
       .type('application/json')
       .send({
