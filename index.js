@@ -115,7 +115,7 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie) {
     uri: 'https://slack.com/api/chat.postMessage',
     body: JSON.stringify({
       "channel": reply_to,
-      "as_user": true,
+      "as_user": false,
       "delete_original": "true",
       "blocks": [{
         "type": "section",
