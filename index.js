@@ -116,7 +116,7 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, u
       "channel": reply_to,
       "as_user": "false",
       "username": userName,
-      "reply_broadcast": "true",
+      // "reply_broadcast": "true",
       "delete_original": "true",
       "blocks": [{
         "type": "section",
