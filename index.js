@@ -21,14 +21,14 @@ app.get('/auth', async (req, res) => {
  function getBotId(code) {
     request.post({
     headers: {
-      'content-type': 'application/x-www-form-urlencoded/json'
+      'content-type': 'application/x-www-form-urlencoded'
     },
     uri: "https://slack.com/api/oauth.access",
-    body: JSON.stringify({
+    form: {
       "client_id": clientID,
       "client_secret": clientSecret,
       "code": code
-    })
+    }
   }, function (error, res) {
     console.log(res.body);
   })
