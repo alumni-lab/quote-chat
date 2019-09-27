@@ -6,7 +6,33 @@ app.use(bodyParser.urlencoded({
   extended: false
 }))
 const port = process.env.PORT || 5000
-const qcToken = process.env.QUOTE_CHAT_TOKEN
+// const qcToken = process.env.QUOTE_CHAT_TOKEN
+const clientID = process.env.CLIENT_ID
+const clientSecret = process.env.CLIENT_SECRET
+app.get('/auth', async (req, res) => {
+  console.log(req.query.code)
+  let stupidThing = await getBotId(req.query.code)
+  setTimeout(() => {
+    
+    console.log(stupidThing)
+  }, 3000);
+})
+
+ function getBotId(code) {
+    request.post({
+    headers: {
+      'content-type': 'application/x-www-form-urlencoded'
+    },
+    uri: "https://slack.com/api/oauth.access",
+    form: {
+      "client_id": clientID,
+      "client_secret": clientSecret,
+      "code": code
+    }
+  }, function (error, res) {
+    console.log(res.body);
+  })
+}
 
 const {
   Client
@@ -41,7 +67,6 @@ async function dbQuery(quote) {
   let quoteList = [];
   let res = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quote}%' LIMIT 12;`);
   for (let row of res.rows) {
-    console.log(row)
     let quo = row
     const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
     quo.character = result.rows[0].name
@@ -95,7 +120,7 @@ async function getChar(id) {
   return res.rows[0].name
 }
 
-function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie) {
+function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, userName) {
   // clear origin message
   request.post({
     headers: {
@@ -115,13 +140,25 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie) {
     uri: 'https://slack.com/api/chat.postMessage',
     body: JSON.stringify({
       "channel": reply_to,
-      "as_user": true,
+      "token": qcToken,
+      "as_user": false,
+      "username": `Quote-Chat`,
+      "reply_broadcast": "true",
       "delete_original": "true",
-      "blocks": [{
+      "blocks": [
+        {
+          "type": "context",
+          "elements": [{
+            "type": "mrkdwn",
+            "text": `_<@${userName}> posted:_ `
+          }]
+        },
+        {
+        
         "type": "section",
         "text": {
           "type": "mrkdwn",
-          "text": `${quoteText}`
+          "text": `"${quoteText}"`
         }
       },
       {
@@ -147,7 +184,6 @@ app.post('/quote', async (req, res) => {
   } else {
     // GET QUOTES FROM DB
     let quotes = await dbQuery(req.body.text);
-
     res.status(200)
       .type('application/json')
       .send({
@@ -276,6 +312,7 @@ app.post('/quote', async (req, res) => {
 
 app.post('/api/response', async (req, res) => {
   const parsedPayload = JSON.parse(req.body.payload)
+  const userName = parsedPayload.user.id
   if (parsedPayload.actions[0].value === 'cancel_quote') {
     res.sendStatus(200)
     request.post({
@@ -420,7 +457,7 @@ app.post('/api/response', async (req, res) => {
       const quoteQuote = yourQuote.rows[0].quote
       const quoteChar = await getChar(yourQuote.rows[0].character_id)
       const quoteMovie = 'The Lord of the Rings'
-      continueRequest(parsedPayload.response_url, parsedPayload.channel.id, quoteQuote, quoteChar, quoteMovie)
+      continueRequest(parsedPayload.response_url, parsedPayload.channel.id, quoteQuote, quoteChar, quoteMovie, userName)
     }
   }
 }
