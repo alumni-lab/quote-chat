@@ -154,7 +154,6 @@ async function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMo
   teamAuth = teamAuth.rows[0]
   qcToken = teamAuth.access_token
   bot_access_token = teamAuth.bot_access_token
-  console.log('qc = ', qcToken, '\nbot = ', bot_access_token)
   request.post({
     headers: {
       'content-type': 'application/json'
@@ -203,9 +202,7 @@ async function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMo
         }
       ]
     })
-  }, function (error, res) {
-    console.log(error, res.body);
-  })
+  }
 }
 
 
