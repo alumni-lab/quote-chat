@@ -7,19 +7,36 @@ app.use(bodyParser.urlencoded({
 }))
 const port = process.env.PORT || 5000
 // const qcToken = process.env.QUOTE_CHAT_TOKEN
+let bot_access_token = ''
+let qcToken = ''
+
 const clientID = process.env.CLIENT_ID
 const clientSecret = process.env.CLIENT_SECRET
+const {
+  Client
+} = require('pg');
+
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true,
+});
+
+
+// when user installs the app from (https://slack.com/oauth/authorize?scope=commands,bot&client_id=736356271046.734176595488)
 app.get('/auth', async (req, res) => {
-  console.log(req.query.code)
-  let stupidThing = await getBotId(req.query.code)
-  setTimeout(() => {
-    
-    console.log(stupidThing)
-  }, 3000);
+  // console.log('origin', req.query)
+  getBotId(req.query.code, async (accessData) => {
+    console.log(accessData)
+    console.log(typeof accessData.team_id)
+    client.query(`INSERT INTO auth (team_id, access_token, bot_access_token) VALUES ('${accessData.team_id}', '${accessData.access_token}', '${accessData.bot_access_token}') RETURNING id;`);
+    console.log('DB DONE')
+  })
+  res.status(200)
 })
 
- function getBotId(code) {
-    request.post({
+function getBotId(code, cb) {
+  let authAccess = ''
+  request.post({
     headers: {
       'content-type': 'application/x-www-form-urlencoded'
     },
@@ -30,18 +47,17 @@ app.get('/auth', async (req, res) => {
       "code": code
     }
   }, function (error, res) {
-    console.log(res.body);
+    const body = JSON.parse(res.body)
+    authAccess = {
+      team_id: body.team_id,
+      access_token: body.access_token,
+      bot_access_token: body.bot.bot_access_token
+    }
+    cb(authAccess)
   })
+
 }
 
-const {
-  Client
-} = require('pg');
-
-const client = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: true,
-});
 
 client.connect();
 
@@ -65,28 +81,38 @@ function shuffle(array) {
 }
 async function dbQuery(quote) {
   let quoteList = [];
-  let res = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quote}%' LIMIT 12;`);
+  let res = await client.query(`SELECT * FROM quotes WHERE lower(quote) LIKE '%${quote.toLowerCase()}%' LIMIT 12;`);
+  let exactQuote = '';
   for (let row of res.rows) {
     let quo = row
     const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
     quo.character = result.rows[0].name
-    quoteList.push(quo)
+    exactQuote = quo;
   }
   if (quoteList.length < 4) {
-    const quoteSplit = quote.split(' ')
+    const stopWords = ["i", "me", "my", "myself", "we", "our", "ours", "ourselves", "you", "your", "yours", "yourself",
+      "yourselves", "he", "him", "his", "himself", "she", "her", "hers", "herself", "it", "its", "itself", "they",
+      "them", "their", "theirs", "themselves", "what", "which", "who", "whom", "this", "that", "these", "those", "am",
+      "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", "having", "do", "does", "did", "doing",
+      "a", "an", "the", "and", "but", "if", "or", "because", "as", "until", "while", "of", "at", "by", "for", "with",
+      "about", "against", "between", "into", "through", "during", "before", "after", "above", "below", "to", "from",
+      "up", "down", "in", "out", "on", "off", "over", "under", "again", "further", "then", "once", "here", "there",
+      "when", "where", "why", "how", "all", "any", "both", "each", "few", "more", "most", "other", "some", "such", "no",
+      "nor", "not", "only", "own", "same", "so", "than", "too", "very", "s", "t", "can", "will", "just", "don",
+      "should", "now", ""];
+    const quoteSplit = quote.split(' ').filter(function (word) {
+      return !stopWords.includes(word);
+    })
     let i = 0
     while (quoteList.length < 30) {
       if (i < quoteSplit.length) {
 
-        if (quoteSplit[i].length > 3) {
-          //only check words with length greater than 3
-          let more = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quoteSplit[i]}%';`);
-          for (let row of more.rows) {
-            let quo = row
-            const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
-            quo.character = result.rows[0].name
-            quoteList.push(quo)
-          }
+        let more = await client.query(`SELECT * FROM quotes WHERE lower(quote) LIKE '%${quoteSplit[i].toLowerCase()}%';`);
+        for (let row of more.rows) {
+          let quo = row
+          const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
+          quo.character = result.rows[0].name
+          quoteList.push(quo)
         }
       } else {
 
@@ -105,7 +131,9 @@ async function dbQuery(quote) {
   }
 
   let shuffled = shuffle(quoteList);
-
+  if (exactQuote) {
+    shuffled.unshift(exactQuote);
+  }
   return shuffled.slice(0, 3)
 
 }
@@ -120,8 +148,12 @@ async function getChar(id) {
   return res.rows[0].name
 }
 
-function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, userName) {
+async function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, userName, teamID) {
   // clear origin message
+  let teamAuth = await client.query(`SELECT * FROM auth WHERE team_id = '${teamID}'`)
+  teamAuth = teamAuth.rows[0]
+  qcToken = teamAuth.access_token
+  bot_access_token = teamAuth.bot_access_token
   request.post({
     headers: {
       'content-type': 'application/json'
@@ -131,7 +163,7 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, u
       "delete_original": "true"
     })
   })
-  // send responst as user
+  // send responst as bot
   request.post({
     headers: {
       'content-type': 'application/json',
@@ -140,8 +172,8 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, u
     uri: 'https://slack.com/api/chat.postMessage',
     body: JSON.stringify({
       "channel": reply_to,
-      "token": qcToken,
-      "as_user": false,
+      "token": bot_access_token,
+      "as_user": false, 
       "username": `Quote-Chat`,
       "reply_broadcast": "true",
       "delete_original": "true",
@@ -154,24 +186,22 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, u
           }]
         },
         {
-        
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": `"${quoteText}"`
+
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": `"${quoteText}"`
+          }
+        },
+        {
+          "type": "context",
+          "elements": [{
+            "type": "mrkdwn",
+            "text": `_${quoteChar}_ from *${quoteMovie}*`
+          }]
         }
-      },
-      {
-        "type": "context",
-        "elements": [{
-          "type": "mrkdwn",
-          "text": `_${quoteChar}_ from *${quoteMovie}*`
-        }]
-      }
       ]
     })
-  }, function (error) {
-    console.log(error);
   })
 }
 
@@ -452,12 +482,12 @@ app.post('/api/response', async (req, res) => {
     })
   } else {
     if (parsedPayload.actions[0].value.slice(0, 8) === 'pick_opt') {
-      const yourQuote = await getDetails(parsedPayload.actions[0].value.slice(12))
       res.sendStatus(200)
+      const yourQuote = await getDetails(parsedPayload.actions[0].value.slice(12))
       const quoteQuote = yourQuote.rows[0].quote
       const quoteChar = await getChar(yourQuote.rows[0].character_id)
       const quoteMovie = 'The Lord of the Rings'
-      continueRequest(parsedPayload.response_url, parsedPayload.channel.id, quoteQuote, quoteChar, quoteMovie, userName)
+      continueRequest(parsedPayload.response_url, parsedPayload.channel.id, quoteQuote, quoteChar, quoteMovie, userName, parsedPayload.team.id)
     }
   }
 }
