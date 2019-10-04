@@ -21,7 +21,7 @@ app.get('/auth', async (req, res) => {
 
 async function getBotId(code) {
   let authAccess = ''
-  const res = await request.post({
+  authAccess = await request.post({
     headers: {
       'content-type': 'application/x-www-form-urlencoded'
     },
@@ -31,16 +31,17 @@ async function getBotId(code) {
       "client_secret": clientSecret,
       "code": code
     }
-  }
-  )
-  console.log(res.body)
-  const body = JSON.parse(res.body)
-  authAccess = {
-    team_id: body.team_id,
-    access_token: body.access_token,
-    bot_access_token: body.bot.bot_access_token
-  }
-  console.log('XXX\n', authAccess, '\nXXX')
+  }, function (error, res) {
+    const body = JSON.parse(res.body)
+    authAccess = {
+      team_id: body.team_id,
+      access_token: body.access_token,
+      bot_access_token: body.bot.bot_access_token
+    }
+    console.log('XXX\n', authAccess, '\nXXX')
+    return authAccess
+
+  })
   return authAccess
 }
 
