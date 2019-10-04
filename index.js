@@ -36,7 +36,7 @@ async function getBotId(code) {
     authAccess = {
       team_id: body.team_id,
       access_token: body.access_token,
-      bot_access_token: body.bot_access_token
+      bot_access_token: body.bot.bot_access_token
     }
     console.log(authAccess, '/nXXX')
   })
