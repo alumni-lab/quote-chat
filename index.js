@@ -458,7 +458,7 @@ app.post('/api/response', async (req, res) => {
       const quoteQuote = yourQuote.rows[0].quote
       const quoteChar = await getChar(yourQuote.rows[0].character_id)
       const quoteMovie = 'The Lord of the Rings'
-      console.log(quoteQuote, quoteChar, quoteMovie)
+      console.log(parsedPayload.response_url, parsedPayload.channel.id)
       continueRequest(parsedPayload.response_url, parsedPayload.channel.id, quoteQuote, quoteChar, quoteMovie, userName)
     }
   }
