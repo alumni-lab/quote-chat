@@ -14,14 +14,16 @@ const clientSecret = process.env.CLIENT_SECRET
 // when user installs the app from (https://slack.com/oauth/authorize?scope=commands,bot&client_id=736356271046.734176595488)
 app.get('/auth', async (req, res) => {
   // console.log('origin', req.query)
-  let stupidThing = await getBotId(req.query.code)
-  console.log('WTF:', stupidThing)
-  res.status(200)
+  getBotId(req.query.code, (stupidThing) => {
+
+    console.log('WTF:', stupidThing)
+    res.status(200)
+  })
 })
 
-async function getBotId(code) {
+function getBotId(code, cb) {
   let authAccess = ''
-  const res = await request.post({
+  request.post({
     headers: {
       'content-type': 'application/x-www-form-urlencoded'
     },
@@ -31,19 +33,17 @@ async function getBotId(code) {
       "client_secret": clientSecret,
       "code": code
     }
-  })
-
-  console.log(res.body)
-  const body = JSON.parse(res.body)
+  }, function (error, res) {
+    const body = JSON.parse(res.body)
     authAccess = {
       team_id: body.team_id,
       access_token: body.access_token,
       bot_access_token: body.bot.bot_access_token
     }
-  console.log('XXX')
+    console.log('XXX')
+    cb(authAccess)
+  })
 
-  console.log('YYY')
-  return authAccess
 }
 
 const {
