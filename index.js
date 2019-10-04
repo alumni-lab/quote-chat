@@ -166,7 +166,7 @@ async function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMo
   request.post({
     headers: {
       'content-type': 'application/json',
-      'Authorization': `Bearer ${qcToken}`
+      'Authorization': `Bearer ${bot_access_token}`
     },
     uri: 'https://slack.com/api/chat.postMessage',
     body: JSON.stringify({
@@ -202,7 +202,7 @@ async function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMo
       ]
     })
   }, function (error, res) {
-    console.log(error, res);
+    console.log(error, res.body);
   })
 }
 
