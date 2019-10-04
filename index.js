@@ -6,7 +6,7 @@ app.use(bodyParser.urlencoded({
   extended: false
 }))
 const port = process.env.PORT || 5000
-// const qcToken = process.env.QUOTE_CHAT_TOKEN
+const qcToken = process.env.QUOTE_CHAT_TOKEN
 const clientID = process.env.CLIENT_ID
 const clientSecret = process.env.CLIENT_SECRET
 
