@@ -94,14 +94,14 @@ async function dbQuery(quote) {
       "nor", "not", "only", "own", "same", "so", "than", "too", "very", "s", "t", "can", "will", "just", "don",
       "should", "now"];
     const quoteSplit = quote.split(' ').filter(function(word) {
-      return stopWords.includes(word);
+      return !stopWords.includes(word);
     })
     console.log("quoteSplit:", quoteSplit);
     let i = 0
     while (quoteList.length < 30) {
       if (i < quoteSplit.length) {
 
-        if (quoteSplit[i].length > 3) {
+        // if (quoteSplit[i].length > 3) {
           //only check words with length greater than 3
           let more = await client.query(`SELECT * FROM quotes WHERE lower(quote) LIKE '%${quoteSplit[i].toLowerCase()}%';`);
           for (let row of more.rows) {
@@ -110,7 +110,7 @@ async function dbQuery(quote) {
             quo.character = result.rows[0].name
             quoteList.push(quo)
           }
-        }
+        // }
       } else {
 
         let evenMore = await client.query(`SELECT * FROM quotes LIMIT ${30 - quoteList.length};`);
