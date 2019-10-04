@@ -22,6 +22,7 @@ app.get('/auth', async (req, res) => {
 })
 
 function getBotId(code) {
+  let authAccess = ''
   request.post({
     headers: {
       'content-type': 'application/x-www-form-urlencoded'
@@ -34,13 +35,13 @@ function getBotId(code) {
     }
   }, function (error, res) {
     const body = JSON.parse(res.body)
-    const authAccess = {
+    authAccess = {
       team_id: body.team_id,
       access_token: body.access_token,
       bot_access_token: body.bot_access_token
     }
-    return authAccess
   })
+  return authAccess
 }
 
 const {
