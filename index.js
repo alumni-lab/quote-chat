@@ -33,10 +33,10 @@ function getBotId(code) {
       "code": code
     }
   }, function (error, res) {
-    console.log(res.body);
-    const teamID = res.query.team_id
-    const access_token = res.query.access_token
-    const bot_access_token = res.query.bot
+    console.log('RES', res.body);
+    const teamID = res.body.team_id
+    const access_token = res.body.access_token
+    const bot_access_token = res.body.bot
     console.log('bot = ', bot_access_token, '\naccess  =', access_token, '\nteam = ', teamID)
 
   })
