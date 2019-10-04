@@ -27,7 +27,8 @@ app.get('/auth', async (req, res) => {
   // console.log('origin', req.query)
   getBotId(req.query.code, async (accessData) => {
     const xxx = await client.query(`INSERT INTO auth (team_id, access_token, bot_access_token) VALUES (${accessData.team_id}, ${accessData.access_token}, ${accessData.bot_access_token}) RETURNING id;`);
-    console.log('DB DONE', xxx)
+    console.log('DB DONE')
+    console.log(xxx)
   })
   res.status(200)
 })
