@@ -17,7 +17,7 @@ app.get('/auth', async (req, res) => {
   const teamID = req.query.team_id
   let stupidThing = await getBotId(req.query.code)
   setTimeout(() => {    
-    // add key to database along with chanel
+    console.log(stupidThing)
   }, 3000);
 })
 
