@@ -81,7 +81,7 @@ async function dbQuery(quote) {
 
         if (quoteSplit[i].length > 3) {
           //only check words with length greater than 3
-          let more = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quoteSplit[i]}%';`);
+          let more = await client.query(`SELECT * FROM quotes WHERE lower(quote) LIKE '%${quoteSplit[i].toLowerCase()}%';`);
           for (let row of more.rows) {
             let quo = row
             const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
