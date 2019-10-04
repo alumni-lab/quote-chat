@@ -171,7 +171,7 @@ async function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMo
     uri: 'https://slack.com/api/chat.postMessage',
     body: JSON.stringify({
       "channel": reply_to,
-      "token": bot_access_token,
+      "token": qcToken,
       "as_user": false, 
       "username": `Quote-Chat`,
       "reply_broadcast": "true",
