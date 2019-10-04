@@ -150,7 +150,7 @@ async function getChar(id) {
 
 async function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, userName, teamID) {
   // clear origin message
-  const teamAuth = await client.query(`SELECT * FROM auth WHERE team_id = ${teamID}`)
+  const teamAuth = await client.query(`SELECT * FROM auth WHERE team_id = '${teamID}'`)
   qcToken = teamAuth.access_token
   bot_access_token = teamAuth.bot_access_token
   request.post({
