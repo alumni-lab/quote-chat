@@ -453,8 +453,9 @@ app.post('/api/response', async (req, res) => {
     })
   } else {
     if (parsedPayload.actions[0].value.slice(0, 8) === 'pick_opt') {
-      const yourQuote = await getDetails(parsedPayload.actions[0].value.slice(12))
       res.sendStatus(200)
+      const yourQuote = await getDetails(parsedPayload.actions[0].value.slice(12))
+      console.log(yourQuote)
       const quoteQuote = yourQuote.rows[0].quote
       const quoteChar = await getChar(yourQuote.rows[0].character_id)
       const quoteMovie = 'The Lord of the Rings'
