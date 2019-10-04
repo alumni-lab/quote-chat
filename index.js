@@ -153,6 +153,7 @@ async function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMo
   const teamAuth = await client.query(`SELECT * FROM auth WHERE team_id = '${teamID}'`)
   qcToken = teamAuth.access_token
   bot_access_token = teamAuth.bot_access_token
+  console.log('qc = ', qcToken, '\nbot = ', bot_access_token)
   request.post({
     headers: {
       'content-type': 'application/json'
@@ -166,12 +167,12 @@ async function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMo
   request.post({
     headers: {
       'content-type': 'application/json',
-      'Authorization': `Bearer ${bot_access_token}`
+      'Authorization': `Bearer ${qcToken}`
     },
     uri: 'https://slack.com/api/chat.postMessage',
     body: JSON.stringify({
       "channel": reply_to,
-      "token": qcToken,
+      "token": bot_access_token,
       "as_user": false, 
       "username": `Quote-Chat`,
       "reply_broadcast": "true",
