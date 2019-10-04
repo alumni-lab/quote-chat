@@ -97,7 +97,6 @@ async function dbQuery(quote) {
     const quoteSplit = quote.split(' ').filter(function(word) {
       return !stopWords.includes(word);
     })
-    console.log("quoteSplit:", quoteSplit);
     let i = 0
     while (quoteList.length < 30) {
       if (i < quoteSplit.length) {
