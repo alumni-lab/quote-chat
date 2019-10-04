@@ -73,7 +73,8 @@ async function dbQuery(quote) {
     let quo = row
     const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
     quo.character = result.rows[0].name
-    quoteList.push(quo)
+    const exactQuote = quo;
+    // quoteList.push(quo)
   }
   if (quoteList.length < 4) {
     const quoteSplit = quote.split(' ')
@@ -108,7 +109,9 @@ async function dbQuery(quote) {
   }
 
   let shuffled = shuffle(quoteList);
-
+  if (exactQuote) {
+    shuffled.unshift(exactQuote);
+  }
   return shuffled.slice(0, 3)
 
 }
