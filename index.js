@@ -101,16 +101,13 @@ async function dbQuery(quote) {
     while (quoteList.length < 30) {
       if (i < quoteSplit.length) {
 
-        // if (quoteSplit[i].length > 3) {
-          //only check words with length greater than 3
-          let more = await client.query(`SELECT * FROM quotes WHERE lower(quote) LIKE '%${quoteSplit[i].toLowerCase()}%';`);
-          for (let row of more.rows) {
-            let quo = row
-            const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
-            quo.character = result.rows[0].name
-            quoteList.push(quo)
-          }
-        // }
+        let more = await client.query(`SELECT * FROM quotes WHERE lower(quote) LIKE '%${quoteSplit[i].toLowerCase()}%';`);
+        for (let row of more.rows) {
+          let quo = row
+          const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
+          quo.character = result.rows[0].name
+          quoteList.push(quo)
+        }
       } else {
 
         let evenMore = await client.query(`SELECT * FROM quotes LIMIT ${30 - quoteList.length};`);
