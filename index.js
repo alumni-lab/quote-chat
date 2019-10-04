@@ -25,9 +25,9 @@ const client = new Client({
 // when user installs the app from (https://slack.com/oauth/authorize?scope=commands,bot&client_id=736356271046.734176595488)
 app.get('/auth', async (req, res) => {
   // console.log('origin', req.query)
-  getBotId(req.query.code, (accessData) => {
-    client.query(`INSERT INTO auth (team_id, access_token, bot_access_token) VALUES (${accessData.team_id}, ${accessData.access_token}, ${accessData.bot_access_token})`);
-    console.log('DB DONE')
+  getBotId(req.query.code, async (accessData) => {
+    const xxx = await client.query(`INSERT INTO auth (team_id, access_token, bot_access_token) VALUES (${accessData.team_id}, ${accessData.access_token}, ${accessData.bot_access_token}) RETURNING id;`);
+    console.log('DB DONE', xxx)
   })
   res.status(200)
 })
