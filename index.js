@@ -162,7 +162,7 @@ async function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMo
       "delete_original": "true"
     })
   })
-  // send responst as user
+  // send responst as bot
   request.post({
     headers: {
       'content-type': 'application/json',
@@ -202,7 +202,7 @@ async function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMo
       ]
     })
   }, function (error, res) {
-    console.log(error);
+    console.log(error, res);
   })
 }
 
@@ -488,7 +488,6 @@ app.post('/api/response', async (req, res) => {
       const quoteQuote = yourQuote.rows[0].quote
       const quoteChar = await getChar(yourQuote.rows[0].character_id)
       const quoteMovie = 'The Lord of the Rings'
-      console.log(parsedPayload.team.id)
       continueRequest(parsedPayload.response_url, parsedPayload.channel.id, quoteQuote, quoteChar, quoteMovie, userName, parsedPayload.team.id)
     }
   }
