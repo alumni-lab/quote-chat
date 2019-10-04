@@ -202,7 +202,7 @@ async function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMo
         }
       ]
     })
-  }
+  })
 }
 
 
