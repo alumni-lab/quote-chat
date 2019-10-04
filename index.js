@@ -13,17 +13,17 @@ const clientSecret = process.env.CLIENT_SECRET
 
 // when user installs the app from (https://slack.com/oauth/authorize?scope=commands,bot&client_id=736356271046.734176595488)
 app.get('/auth', async (req, res) => {
-  console.log('origin', req.query)
+  // console.log('origin', req.query)
   let stupidThing = await getBotId(req.query.code)
   setTimeout(() => {
-    console.log('WTF', stupidThing)
+    console.log('WTF:', stupidThing)
   }, 3000);
   res.status(200)
 })
 
-function getBotId(code) {
+async function getBotId(code) {
   let authAccess = ''
-  request.post({
+  await request.post({
     headers: {
       'content-type': 'application/x-www-form-urlencoded'
     },
