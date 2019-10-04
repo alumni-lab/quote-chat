@@ -194,7 +194,6 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, u
     })
   }, function (error, res) {
     console.log(error);
-    console.log(res)
   })
 }
 
