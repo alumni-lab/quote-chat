@@ -14,6 +14,7 @@ const clientSecret = process.env.CLIENT_SECRET
 // when user installs the app from (https://slack.com/oauth/authorize?scope=commands,bot&client_id=736356271046.734176595488)
 app.get('/auth', async (req, res) => {
   console.log(req.query)
+  const teamID = req.query.team_id
   let stupidThing = await getBotId(req.query.code)
   setTimeout(() => {    
     // add key to database along with chanel
