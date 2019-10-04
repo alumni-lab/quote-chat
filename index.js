@@ -38,7 +38,9 @@ async function getBotId(code) {
       access_token: body.access_token,
       bot_access_token: body.bot.bot_access_token
     }
+    console.log('XXX')
   })
+  console.log('YYY')
   return authAccess
 }
 
