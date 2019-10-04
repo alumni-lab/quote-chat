@@ -9,12 +9,13 @@ const port = process.env.PORT || 5000
 // const qcToken = process.env.QUOTE_CHAT_TOKEN
 const clientID = process.env.CLIENT_ID
 const clientSecret = process.env.CLIENT_SECRET
+
+
+// when user installs the app from (https://slack.com/oauth/authorize?scope=commands,bot&client_id=736356271046.734176595488)
 app.get('/auth', async (req, res) => {
-  console.log(req.query.code)
   let stupidThing = await getBotId(req.query.code)
-  setTimeout(() => {
-    
-    console.log(stupidThing)
+  setTimeout(() => {    
+    // add key to database along with chanel
   }, 3000);
 })
 
