@@ -69,11 +69,12 @@ function shuffle(array) {
 async function dbQuery(quote) {
   let quoteList = [];
   let res = await client.query(`SELECT * FROM quotes WHERE lower(quote) LIKE '%${quote.toLowerCase()}%' LIMIT 12;`);
+  let exactQuote = '';
   for (let row of res.rows) {
     let quo = row
     const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
     quo.character = result.rows[0].name
-    const exactQuote = quo;
+    exactQuote = quo;
     // quoteList.push(quo)
   }
   if (quoteList.length < 4) {
