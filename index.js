@@ -6,19 +6,29 @@ app.use(bodyParser.urlencoded({
   extended: false
 }))
 const port = process.env.PORT || 5000
-const qcToken = process.env.QUOTE_CHAT_TOKEN
+// const qcToken = process.env.QUOTE_CHAT_TOKEN
+let bot_access_token = ''
+let qcToken = ''
+
 const clientID = process.env.CLIENT_ID
 const clientSecret = process.env.CLIENT_SECRET
+const {
+  Client
+} = require('pg');
+
+const client = new Client({
+  connectionString: process.env.DATABASE_URL,
+  ssl: true,
+});
 
 
 // when user installs the app from (https://slack.com/oauth/authorize?scope=commands,bot&client_id=736356271046.734176595488)
 app.get('/auth', async (req, res) => {
   // console.log('origin', req.query)
-  getBotId(req.query.code, (stupidThing) => {
-
-    console.log('WTF:', stupidThing)
-    res.status(200)
+  getBotId(req.query.code, (accessData) => {
+    client.query(`INSERT INTO auth (team_id, access_token, bot_access_token) VALUES (${accessData.team_id}, ${accessData.access_token}, ${accessData.bot_access_token})`);
   })
+  res.status(200)
 })
 
 function getBotId(code, cb) {
@@ -40,20 +50,11 @@ function getBotId(code, cb) {
       access_token: body.access_token,
       bot_access_token: body.bot.bot_access_token
     }
-    console.log('XXX')
     cb(authAccess)
   })
 
 }
 
-const {
-  Client
-} = require('pg');
-
-const client = new Client({
-  connectionString: process.env.DATABASE_URL,
-  ssl: true,
-});
 
 client.connect();
 
@@ -144,8 +145,11 @@ async function getChar(id) {
   return res.rows[0].name
 }
 
-function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, userName) {
+async function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, userName, teamID) {
   // clear origin message
+  const teamAuth = await client.query(`SELECT * FROM auth WHERE team_id = ${teamID}`)
+  qcToken = teamAuth.access_token
+  bot_access_token = teamAuth.bot_access_token
   request.post({
     headers: {
       'content-type': 'application/json'
@@ -164,8 +168,8 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, u
     uri: 'https://slack.com/api/chat.postMessage',
     body: JSON.stringify({
       "channel": reply_to,
-      "token": qcToken,
-      "as_user": false,
+      "token": bot_access_token,
+      "as_user": false, 
       "username": `Quote-Chat`,
       "reply_broadcast": "true",
       "delete_original": "true",
@@ -481,7 +485,8 @@ app.post('/api/response', async (req, res) => {
       const quoteQuote = yourQuote.rows[0].quote
       const quoteChar = await getChar(yourQuote.rows[0].character_id)
       const quoteMovie = 'The Lord of the Rings'
-      continueRequest(parsedPayload.response_url, parsedPayload.channel.id, quoteQuote, quoteChar, quoteMovie, userName)
+      console.log(parsedPayload.team.id)
+      continueRequest(parsedPayload.response_url, parsedPayload.channel.id, quoteQuote, quoteChar, quoteMovie, userName, parsedPayload.team.id)
     }
   }
 }
