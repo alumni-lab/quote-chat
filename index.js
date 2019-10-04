@@ -16,7 +16,7 @@ app.get('/auth', async (req, res) => {
   console.log(req.query)
   const teamID = req.query.team_id
   const access_token = req.query.access_token
-  const bot_access_token = req.query.bot.bot_access_token
+  const bot_access_token = req.query.bot
   console.log('bot = ', bot_access_token, '\naccess  =', access_token, '\nteam = ', teamID)
   let stupidThing = await getBotId(req.query.code)
   setTimeout(() => {    
