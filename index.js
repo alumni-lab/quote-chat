@@ -13,16 +13,16 @@ const clientSecret = process.env.CLIENT_SECRET
 
 // when user installs the app from (https://slack.com/oauth/authorize?scope=commands,bot&client_id=736356271046.734176595488)
 app.get('/auth', async (req, res) => {
-  console.log(req.query)
-  const teamID = req.query.team_id
+  console.log('origin', req.query)
   let stupidThing = await getBotId(req.query.code)
-  setTimeout(() => {    
-    // add key to database along with chanel
+  setTimeout(() => {
+    console.log('WTF', stupidThing)
   }, 3000);
+  res.status(200)
 })
 
- function getBotId(code) {
-    request.post({
+function getBotId(code) {
+  request.post({
     headers: {
       'content-type': 'application/x-www-form-urlencoded'
     },
@@ -33,7 +33,13 @@ app.get('/auth', async (req, res) => {
       "code": code
     }
   }, function (error, res) {
-    console.log(res.body);
+    const body = JSON.parse(res.body)
+    console.log('RES', body);
+    const teamID = body.team_id
+    const access_token = body.access_token
+    const bot_access_token = body.bot
+    console.log('bot = ', bot_access_token, '\naccess  =', access_token, '\nteam = ', teamID)
+
   })
 }
 
@@ -173,20 +179,20 @@ function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMovie, u
           }]
         },
         {
-        
-        "type": "section",
-        "text": {
-          "type": "mrkdwn",
-          "text": `"${quoteText}"`
+
+          "type": "section",
+          "text": {
+            "type": "mrkdwn",
+            "text": `"${quoteText}"`
+          }
+        },
+        {
+          "type": "context",
+          "elements": [{
+            "type": "mrkdwn",
+            "text": `_${quoteChar}_ from *${quoteMovie}*`
+          }]
         }
-      },
-      {
-        "type": "context",
-        "elements": [{
-          "type": "mrkdwn",
-          "text": `_${quoteChar}_ from *${quoteMovie}*`
-        }]
-      }
       ]
     })
   }, function (error, res) {
