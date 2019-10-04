@@ -66,7 +66,7 @@ function shuffle(array) {
 }
 async function dbQuery(quote) {
   let quoteList = [];
-  let res = await client.query(`SELECT * FROM quotes WHERE quote LIKE '%${quote}%' LIMIT 12;`);
+  let res = await client.query(`SELECT * FROM quotes WHERE lower(quote) LIKE '%${quote.toLowerCase()}%' LIMIT 12;`);
   for (let row of res.rows) {
     let quo = row
     const result = await client.query(`SELECT * FROM characters WHERE id = ${row.character_id};`)
