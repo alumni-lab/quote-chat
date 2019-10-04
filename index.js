@@ -33,7 +33,7 @@ async function getBotId(code) {
     }
   }
   )
-
+  console.log(res.body)
   const body = JSON.parse(res.body)
   authAccess = {
     team_id: body.team_id,
