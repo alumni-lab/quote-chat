@@ -209,7 +209,7 @@ async function continueRequest(clearUrl, reply_to, quoteText, quoteChar, quoteMo
 app.post('/quote', async (req, res) => {
   if (req.body.text.toLowerCase() == '-help') {
     res.send({
-      "text": "Type in your quote and see the magic happen \nExamples: \n/quote -movie batman (shows quotes from batman)\n/quote -char jack sparrow (shows quotes from jack sparrow)\n/quote i'll be back (searches for quotes containing 'i'll be back'"
+      "text": "Type in your quote and see the magic happen \nExamples: \n/quote i'll be back (searches for quotes containing 'i'll be back')"
     })
   } else {
     // GET QUOTES FROM DB
